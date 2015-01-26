@@ -140,13 +140,30 @@ void GLWidget::paintGL()
 		// Penguin head
 		transformStack().pushMatrix();
 			transformStack().scale(125.0f, 125.0f);
-			transformStack().translate(0.0, 1.0f);
-			m_gl_state.setColor(0.0, 0.0, 1.0);
+			transformStack().translate(0.0, 1.0f);			
 
 			// Rotate along the hinge
         	transformStack().rotateInDegrees(m_joint_angle);
 
+			m_gl_state.setColor(0.0, 0.0, 1.0);
 			m_penguin_head.draw();
+
+			// Penguin beak
+			transformStack().pushMatrix();	
+				transformStack().scale(0.8f, 0.6f);		
+				transformStack().translate(-1.0, 0.25);
+				m_gl_state.setColor(1.0, 0.0, 1.0);
+				m_penguin_beak.draw();
+			transformStack().popMatrix();
+
+			// Penguin jaw
+			transformStack().pushMatrix();	
+				transformStack().scale(0.8f, 0.08f);			
+				transformStack().translate(-1.0, -0.75);           		
+		        m_gl_state.setColor(1.0, 0.0, 1.0);
+				m_unit_square.draw();
+		    transformStack().popMatrix();
+			
 		transformStack().popMatrix();
 
 		// Penguin wing
@@ -161,22 +178,6 @@ void GLWidget::paintGL()
 			m_gl_state.setColor(0.0, 0.0, 1.0);
 			m_penguin_wing.draw();
 		transformStack().popMatrix();
-
-		// Penguin beak
-		transformStack().pushMatrix();	
-			transformStack().scale(100.0f, 75.0f);		
-			transformStack().translate(-1.0, 2.0);
-			m_gl_state.setColor(1.0, 0.0, 1.0);
-			m_penguin_beak.draw();
-		transformStack().popMatrix();
-
-		// Penguin jaw
-		transformStack().pushMatrix();	
-			transformStack().scale(100.0, 10.0);			
-			transformStack().translate(-1.0, 12.0);            		
-            m_gl_state.setColor(1.0, 0.0, 1.0);
-	    	m_unit_square.draw();
-        transformStack().popMatrix();
 
 		// Penguin leg1
 		transformStack().pushMatrix();
@@ -201,8 +202,16 @@ void GLWidget::paintGL()
 			transformStack().scale(25.0, 100.0);       	
 			transformStack().translate(0.0, -0.5);
             m_gl_state.setColor(1.0, 0.0, 1.0);
-
 	    	m_unit_square.draw();
+
+			// Foot Joint
+			transformStack().pushMatrix();
+				transformStack().translate(0.0, -0.5);				
+				m_gl_state.setColor(1.0, 1.0, 1.0);
+				transformStack().scale(0.25, 0.05);
+				m_unit_circle.draw();
+        	transformStack().popMatrix();		
+	
         transformStack().popMatrix();
 
 		// Penguin leg2
@@ -222,66 +231,55 @@ void GLWidget::paintGL()
 	    		m_unit_square.draw();
         	transformStack().popMatrix();
 
+			// Apply transformation to leg
             transformStack().scale(25.0, 100.0);
 			transformStack().translate(0.0, -0.5);
             m_gl_state.setColor(1.0, 0.0, 1.0);
-
 	    	m_unit_square.draw();
+
+			// Foot Joint
+			transformStack().pushMatrix();
+				transformStack().translate(0.0, -0.5);				
+				m_gl_state.setColor(1.0, 1.0, 1.0);
+				transformStack().scale(0.25, 0.05);
+				m_unit_circle.draw();
+        	transformStack().popMatrix();
+
         transformStack().popMatrix();
 
-/*
-		// Penguin foot2
+		/* JOINTS: */
+	
+		// Head Joint
 		transformStack().pushMatrix();
-        	transformStack().rotateInDegrees(m_joint_angle);
-	
-			transformStack().scale(100.0, 25.0);
-			transformStack().translate(0.75, -6.5);
-			m_gl_state.setColor(0.0, 0.0, 1.0);
+			m_gl_state.setColor(1.0, 1.0, 1.0);
+			transformStack().scale(5.0, 5.0);
+			transformStack().translate(0.0, 25.0f);
+			m_unit_circle.draw();
+		transformStack().popMatrix();
 
-	    	m_unit_square.draw();
-        transformStack().popMatrix();
-*/
+		// Wing Joint
+		transformStack().pushMatrix();
+			m_gl_state.setColor(1.0, 1.0, 1.0);
+			transformStack().scale(5.0, 5.0);
+			transformStack().translate(0.0, 10.0f);
+			m_unit_circle.draw();
+		transformStack().popMatrix();
 
-/*
-		// Draw our hinged object
-		const float BODY_WIDTH = 60.0f;
-		const float BODY_LENGTH = 100.0f;
-		const float ARM_LENGTH = 100.0f;
-		const float ARM_WIDTH = 20.0f;
-	
+		// Leg1 Joint
+		transformStack().pushMatrix();
+			m_gl_state.setColor(1.0, 1.0, 1.0);
+			transformStack().scale(5.0, 5.0);
+			transformStack().translate(-10.0, -15.0);
+			m_unit_circle.draw();
+		transformStack().popMatrix();
 
-        // Draw the 'body'
-        transformStack().pushMatrix();
-            // Scale square to size of body
-            transformStack().scale(BODY_WIDTH, BODY_LENGTH);
-
-            // Set the colour to green
-            m_gl_state.setColor(0.0, 1.0, 0.0);
-
-            // Draw the square for the body
-	    m_unit_square.draw();
-        transformStack().popMatrix();
-
-        // Draw the 'arm'
-
-        // Move the arm to the joint hinge
-        transformStack().translate(0.0, -BODY_LENGTH/2 + ARM_WIDTH);
-
-        // Rotate along the hinge
-        transformStack().rotateInDegrees(m_joint_angle);
-
-        // Scale the size of the arm
-        transformStack().scale(ARM_WIDTH, ARM_LENGTH);
-
-        // Move to center location of arm, under previous rotation
-        transformStack().translate(0.0, -0.5);
-
-        // Draw the square for the arm
-        m_gl_state.setColor(1.0, 0.0, 0.0);
-	m_unit_square.draw();
-*/
-
-
+		// Leg2 Joint
+		transformStack().pushMatrix();
+			m_gl_state.setColor(1.0, 1.0, 1.0);
+			transformStack().scale(5.0, 5.0);
+			transformStack().translate(10.0, -15.0);
+			m_unit_circle.draw();
+		transformStack().popMatrix();
 
     // Retrieve the previous state of the transformation stack
     transformStack().popMatrix();
