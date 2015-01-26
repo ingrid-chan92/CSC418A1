@@ -44,6 +44,135 @@ public:
     }
 };
 
+// Before transformed, this class displays a penguin head centered at the
+// origin.
+class PenguinHead : public GLShape
+{
+public:
+    using GLShape::initialize;
+
+    void initialize(int shader_input_location)
+    {
+	// Use two triangles to create the square and three triangles for the sides
+        GLfloat vertices[][2] =
+        {
+            { -0.5, -0.25 },  // Square: Triangle 1
+            {  0.5, -0.25 },
+            {  0.5,  0.5 },
+            { -0.5, -0.25 },  // Square: Triangle 2
+            {  0.5,  0.5 },
+            { -0.5,  0.5 },
+			{ -0.5, -0.25 },  // Left: Triangle 3
+            { -0.5,  0.5 },
+            { -0.75, -0.25 },
+			{  0.5,  0.5 },  // Right: Triangle 4
+            {  0.5, -0.25 },
+            {  0.75, -0.25 },
+			{  0.5,  0.5 },  // Top: Triangle 5
+            { -0.5,  0.5 },
+            { -0.25, 0.75 },
+        };
+
+        initialize(
+	    shader_input_location,
+            reinterpret_cast<const GLfloat *>(vertices),
+            /*num_vertices=*/15,
+	    GL_TRIANGLES); // Each group of three coordinates is a triangle
+    }
+};
+
+// Before transformed, this class displays a penguin body centered at the
+// origin.
+class PenguinBody : public GLShape
+{
+public:
+    using GLShape::initialize;
+
+    void initialize(int shader_input_location)
+    {
+	// Use two triangles to create the square and three triangles for the sides
+        GLfloat vertices[][2] =
+        {
+            { -0.75, 1.0 },  // Square: Triangle 1
+            { -0.75, -1.0 },
+            {  0.75,  1.0 },
+            {  0.75,  1.0 },  // Square: Triangle 2
+            { -0.75, -1.0 },
+            {  0.75, -1.0 },
+
+			{ -0.75, 1.0 },  // Left: Triangle 3
+            { -0.75, -1.0 },
+            { -1.0, -0.5 },
+			{  0.75,  1.0 },  // Right: Triangle 4
+            {  0.75, -1.0 },
+            {  1.0, -0.5 },
+
+        };
+
+        initialize(
+	    shader_input_location,
+            reinterpret_cast<const GLfloat *>(vertices),
+            /*num_vertices=*/12,
+	    GL_TRIANGLES); // Each group of three coordinates is a triangle
+    }
+};
+
+// Before transformed, this class displays a penguin wing centered at the
+// origin.
+class PenguinWing : public GLShape
+{
+public:
+    using GLShape::initialize;
+
+    void initialize(int shader_input_location)
+    {
+	// Use two triangles to create the square and three triangles for the sides
+        GLfloat vertices[][2] =
+        {
+            { -0.5, 0.5 },  // Triangle 1
+            {  0.5, 0.5 },
+            { -0.25, -0.5 },
+            {  0.5, 0.5 },  // Triangle 2
+            { -0.25, -0.5 },
+			{  0.25, -0.5 }, 
+        };
+
+        initialize(
+	    shader_input_location,
+            reinterpret_cast<const GLfloat *>(vertices),
+            /*num_vertices=*/6,
+	    GL_TRIANGLES); // Each group of three coordinates is a triangle
+    }
+};
+
+// Before transformed, this class displays a penguin beak centered at the
+// origin.
+class PenguinBeak : public GLShape
+{
+public:
+    using GLShape::initialize;
+
+    void initialize(int shader_input_location)
+    {
+	// Use two triangles to create the square and three triangles for the sides
+        GLfloat vertices[][2] =
+        {
+            { -0.5, -0.25 },  // Triangle 1
+            {  0.5, -0.25 },
+            { -0.5, 0 },
+            {  0.5, -0.25 }, // Triangle 2
+            { -0.5, 0 },
+			{  0.5, 0.5 }, 
+        };
+
+        initialize(
+	    shader_input_location,
+            reinterpret_cast<const GLfloat *>(vertices),
+            /*num_vertices=*/6,
+	    GL_TRIANGLES); // Each group of three coordinates is a triangle
+    }
+};
+
 // Before transformed, this class displays a unit circle centered at the
 // origin.
 class UnitCircle : public GLShape
@@ -136,9 +265,15 @@ private:
     int m_animation_frame;
     UnitSquare m_unit_square;
     UnitCircle m_unit_circle;
+	
     //////////////////////////////////////////////////////////////////////////
     // TODO: Add additional joint parameters.
     //////////////////////////////////////////////////////////////////////////
+	PenguinHead m_penguin_head;
+	PenguinBody m_penguin_body;
+	PenguinWing m_penguin_wing;
+	PenguinBeak m_penguin_beak;
+
     double m_joint_angle;
 };
 
