@@ -180,9 +180,24 @@ void GLWidget::paintGL()
 
 		// Penguin leg1
 		transformStack().pushMatrix();
-			transformStack().translate(-3.5, -3.5);
+
+			// Apply rotation to whole leg
+			transformStack().translate(-50.0, -75.0);
 			transformStack().rotateInDegrees(m_joint_angle);            
 
+			// Penguin foot
+			transformStack().pushMatrix();
+				// Rotate at hinge
+				transformStack().translate(0.0, -100.0);
+        		transformStack().rotateInDegrees(m_joint_angle);
+				
+				transformStack().scale(100.0, 25.0);
+				transformStack().translate(-0.25, 0.0); 				
+		        m_gl_state.setColor(0.0, 0.0, 1.0);
+	    		m_unit_square.draw();
+        	transformStack().popMatrix();
+			
+			// Apply transformations to leg
 			transformStack().scale(25.0, 100.0);       	
 			transformStack().translate(0.0, -0.5);
             m_gl_state.setColor(1.0, 0.0, 1.0);
@@ -192,26 +207,29 @@ void GLWidget::paintGL()
 
 		// Penguin leg2
 		transformStack().pushMatrix();
+			transformStack().translate(50.0, -75.0);
         	transformStack().rotateInDegrees(m_joint_angle);
 
+			// Penguin foot
+			transformStack().pushMatrix();
+				// Rotate at hinge
+				transformStack().translate(0.0, -100.0);
+        		transformStack().rotateInDegrees(m_joint_angle);
+				
+				transformStack().scale(100.0, 25.0);
+				transformStack().translate(-0.25, 0.0); 				
+		        m_gl_state.setColor(0.0, 0.0, 1.0);
+	    		m_unit_square.draw();
+        	transformStack().popMatrix();
+
             transformStack().scale(25.0, 100.0);
-			transformStack().translate(1.25, -1.25);
+			transformStack().translate(0.0, -0.5);
             m_gl_state.setColor(1.0, 0.0, 1.0);
 
 	    	m_unit_square.draw();
         transformStack().popMatrix();
 
-		// Penguin foot1
-		transformStack().pushMatrix();
-        	transformStack().rotateInDegrees(m_joint_angle);
-
-			transformStack().scale(100.0, 25.0);
-			transformStack().translate(-0.75, -6.5);
-            m_gl_state.setColor(0.0, 0.0, 1.0);
-
-	    	m_unit_square.draw();
-        transformStack().popMatrix();
-
+/*
 		// Penguin foot2
 		transformStack().pushMatrix();
         	transformStack().rotateInDegrees(m_joint_angle);
@@ -222,7 +240,7 @@ void GLWidget::paintGL()
 
 	    	m_unit_square.draw();
         transformStack().popMatrix();
-
+*/
 
 /*
 		// Draw our hinged object
