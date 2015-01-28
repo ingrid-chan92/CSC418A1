@@ -43,21 +43,61 @@ public:
 
         // Create a slider to control the joint angle, and make it call
         // GLWidget::setJointAngle when the slider value changes.
-        m_slider = create_joint_angle_slider(
-	    "Joint", GLWidget::JOINT_MIN, GLWidget::JOINT_MAX);
-        connect(
-            m_slider, SIGNAL(valueChanged(int)),
-            m_gl_widget, SLOT(setJointAngle(int)));
 
         //////////////////////////////////////////////////////
         // TODO: Add additional joint sliders here
         //////////////////////////////////////////////////////
 
+		head_slider = create_joint_angle_slider(
+	    "Head", GLWidget::HEAD_MIN, GLWidget::HEAD_MAX);
+        connect(
+            head_slider, SIGNAL(valueChanged(int)),
+            m_gl_widget, SLOT(setHeadAngle(int)));
+
+		wing_slider = create_joint_angle_slider(
+	    "Wing", GLWidget::WING_MIN, GLWidget::WING_MAX);
+        connect(
+            wing_slider, SIGNAL(valueChanged(int)),
+            m_gl_widget, SLOT(setWingAngle(int)));
+
+		leg1_slider = create_joint_angle_slider(
+	    "Leg 1", GLWidget::LEG_MIN, GLWidget::LEG_MAX);
+        connect(
+            leg1_slider, SIGNAL(valueChanged(int)),
+            m_gl_widget, SLOT(setLeg1Angle(int)));
+
+		foot1_slider = create_joint_angle_slider(
+	    "Foot 1", GLWidget::FOOT_MIN, GLWidget::FOOT_MAX);
+        connect(
+            foot1_slider, SIGNAL(valueChanged(int)),
+            m_gl_widget, SLOT(setFoot1Angle(int)));
+
+		leg2_slider = create_joint_angle_slider(
+	    "Leg 2", GLWidget::LEG_MIN, GLWidget::LEG_MAX);
+        connect(
+            leg2_slider, SIGNAL(valueChanged(int)),
+            m_gl_widget, SLOT(setLeg2Angle(int)));
+
+		foot2_slider = create_joint_angle_slider(
+	    "Foot 2", GLWidget::FOOT_MIN, GLWidget::FOOT_MAX);
+        connect(
+            foot2_slider, SIGNAL(valueChanged(int)),
+            m_gl_widget, SLOT(setFoot2Angle(int)));
+
+		jaw_slider = create_joint_angle_slider(
+	    "Jaw", GLWidget::JAW_MIN, GLWidget::JAW_MAX);
+        connect(
+            jaw_slider, SIGNAL(valueChanged(int)),
+            m_gl_widget, SLOT(setJawHeight(int)));
+
+
         m_main_layout->addWidget(m_animate_checkbox);
         m_main_layout->addWidget(m_quit_button);
         setLayout(m_main_layout);
+	
+		head_slider->setValue(0);
+		wing_slider->setValue(0);
 
-        m_slider->setValue(0);
         setWindowTitle("CSC418/2504 Assignment 1");
     }
 
@@ -89,8 +129,15 @@ private:
     GLWidget *m_gl_widget;
     QCheckBox *m_animate_checkbox;
     QPushButton *m_quit_button;
-    QSlider *m_slider;
     QVBoxLayout *m_main_layout;
+
+	QSlider *head_slider;
+	QSlider *wing_slider;
+	QSlider *leg1_slider;
+	QSlider *leg2_slider;
+	QSlider *foot1_slider;
+	QSlider *foot2_slider;
+	QSlider *jaw_slider;
 };
 
 #endif

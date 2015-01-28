@@ -30,7 +30,13 @@ GLWidget::GLWidget(QWidget *parent)
     : QGLWidget(createQGLFormat(), parent)
     , m_is_animating(false)
     , m_animation_frame(0)
-    , m_joint_angle(0)
+	, head_angle(0)
+	, wing_angle(10)
+	, leg1_angle(-20)
+	, leg2_angle(20)
+	, foot1_angle(0)
+	, foot2_angle(0)
+	, jaw_height(0)
 {
     // Start a timer that will call the timerEvent method every 50ms.
     startTimer(/*milliseconds=*/50);
@@ -87,15 +93,24 @@ void GLWidget::timerEvent(QTimerEvent *)
 
     // Update joint angles.
     const double joint_rot_speed = 0.1;
-    double joint_rot_t =
-        (sin(m_animation_frame * joint_rot_speed) + 1.0) / 2.0;
-    m_joint_angle = joint_rot_t * JOINT_MIN + (1 - joint_rot_t) * JOINT_MAX;
+    double joint_rot_t = (sin(m_animation_frame * joint_rot_speed) + 1.0) / 2.0;
 
     //////////////////////////////////////////////////////////////////////////
     // TODO:
     //   Modify this function to animate the character's joints
     //   Note: Nothing should be drawn in this function!
     //////////////////////////////////////////////////////////////////////////
+	head_angle = joint_rot_t * HEAD_MIN + (1 - joint_rot_t) * HEAD_MAX;
+	wing_angle = joint_rot_t * WING_MIN + (1 - joint_rot_t) * WING_MAX;
+
+	double leg_angle = joint_rot_t * LEG_MIN + (1 - joint_rot_t) * LEG_MAX;
+	double foot_angle = joint_rot_t * FOOT_MIN + (1 - joint_rot_t) * FOOT_MAX;
+	leg1_angle = leg_angle;
+	leg2_angle = -leg_angle;
+	foot1_angle = foot_angle;	
+	foot2_angle = -foot_angle;
+	
+	jaw_height = joint_rot_t * JAW_MIN + (1 - joint_rot_t) * JAW_MAX;	
 
     // Tell this widget to redraw itself.
     update();
@@ -143,7 +158,7 @@ void GLWidget::paintGL()
 			transformStack().translate(0.0, 1.0f);			
 
 			// Rotate along the hinge
-        	transformStack().rotateInDegrees(m_joint_angle);
+        	transformStack().rotateInDegrees(head_angle);
 
 			m_gl_state.setColor(0.0, 0.0, 1.0);
 			m_penguin_head.draw();
@@ -159,7 +174,11 @@ void GLWidget::paintGL()
 			// Penguin jaw
 			transformStack().pushMatrix();	
 				transformStack().scale(0.8f, 0.08f);			
-				transformStack().translate(-1.0, -0.75);           		
+				transformStack().translate(-1.0, -0.75); 
+
+				// Add motion to jaw
+				transformStack().translate(0, jaw_height);
+          		
 		        m_gl_state.setColor(1.0, 0.0, 1.0);
 				m_unit_square.draw();
 		    transformStack().popMatrix();
@@ -172,7 +191,7 @@ void GLWidget::paintGL()
 
 			// Rotate along the hinge
 			transformStack().translate(0.0, 0.5);
-        	transformStack().rotateInDegrees(m_joint_angle);
+        	transformStack().rotateInDegrees(wing_angle);
 			transformStack().translate(0.0, -0.5);
 
 			m_gl_state.setColor(0.0, 0.0, 1.0);
@@ -184,13 +203,13 @@ void GLWidget::paintGL()
 
 			// Apply rotation to whole leg
 			transformStack().translate(-50.0, -75.0);
-			transformStack().rotateInDegrees(m_joint_angle);            
+			transformStack().rotateInDegrees(leg1_angle);            
 
 			// Penguin foot
 			transformStack().pushMatrix();
 				// Rotate at hinge
 				transformStack().translate(0.0, -100.0);
-        		transformStack().rotateInDegrees(m_joint_angle);
+        		transformStack().rotateInDegrees(foot1_angle);
 				
 				transformStack().scale(100.0, 25.0);
 				transformStack().translate(-0.25, 0.0); 				
@@ -217,13 +236,13 @@ void GLWidget::paintGL()
 		// Penguin leg2
 		transformStack().pushMatrix();
 			transformStack().translate(50.0, -75.0);
-        	transformStack().rotateInDegrees(m_joint_angle);
+        	transformStack().rotateInDegrees(leg2_angle);
 
 			// Penguin foot
 			transformStack().pushMatrix();
 				// Rotate at hinge
 				transformStack().translate(0.0, -100.0);
-        		transformStack().rotateInDegrees(m_joint_angle);
+        		transformStack().rotateInDegrees(foot2_angle);
 				
 				transformStack().scale(100.0, 25.0);
 				transformStack().translate(-0.25, 0.0); 				
@@ -247,7 +266,7 @@ void GLWidget::paintGL()
 
         transformStack().popMatrix();
 
-		/* JOINTS: */
+		/* JOINT CIRCLES: */
 	
 		// Head Joint
 		transformStack().pushMatrix();

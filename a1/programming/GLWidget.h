@@ -221,21 +221,80 @@ public:
     //   Add different ranges for the different joints.  Use these ranges
     //   when constructing sliders and when animating joints.
     //////////////////////////////////////////////////////////////////////////
-    static const int JOINT_MIN = -45;
-    static const int JOINT_MAX = 45;
+    static const int HEAD_MIN = -45;
+    static const int HEAD_MAX = 45;
+    static const int WING_MIN = -60;
+    static const int WING_MAX = 60;
+    static const int LEG_MIN = -45;
+    static const int LEG_MAX = 45;
+    static const int FOOT_MIN = -45;
+    static const int FOOT_MAX = 45;
+	static const int JAW_MIN = -2;
+	static const int JAW_MAX = 2;
 
     GLWidget(QWidget *parent=NULL);
 
 public slots:
     // This method is called when the user changes the joint angle slider.
-    //////////////////////////////////////////////////////////////////////////
-    // TODO:
-    //   There is currently only one joint, but you need to add more.
-    //////////////////////////////////////////////////////////////////////////
-    void setJointAngle(int angle)
+
+	void setHeadAngle(int angle)
     {
         // This method is called when the user changes the slider value.
-        m_joint_angle = angle;
+        head_angle = angle;
+
+        // Call update() to trigger a redraw.
+        update();
+    }
+
+	void setWingAngle(int angle)
+    {
+        // This method is called when the user changes the slider value.
+        wing_angle = angle;
+
+        // Call update() to trigger a redraw.
+        update();
+    }
+
+	void setLeg1Angle(int angle)
+    {
+        // This method is called when the user changes the slider value.
+        leg1_angle = angle;
+
+        // Call update() to trigger a redraw.
+        update();
+    }
+
+	void setLeg2Angle(int angle)
+    {
+        // This method is called when the user changes the slider value.
+        leg2_angle = angle;
+
+        // Call update() to trigger a redraw.
+        update();
+    }
+
+	void setFoot1Angle(int angle)
+    {
+        // This method is called when the user changes the slider value.
+        foot1_angle = angle;
+
+        // Call update() to trigger a redraw.
+        update();
+    }
+
+	void setFoot2Angle(int angle)
+    {
+        // This method is called when the user changes the slider value.
+        foot2_angle = angle;
+
+        // Call update() to trigger a redraw.
+        update();
+    }
+
+	void setJawHeight(int height)
+    {
+        // This method is called when the user changes the slider value.
+        jaw_height = height;
 
         // Call update() to trigger a redraw.
         update();
@@ -274,7 +333,13 @@ private:
 	PenguinWing m_penguin_wing;
 	PenguinBeak m_penguin_beak;
 
-    double m_joint_angle;
+	double head_angle;
+	double wing_angle;
+	double leg1_angle;
+	double leg2_angle;
+	double foot1_angle;
+	double foot2_angle;
+	double jaw_height;
 };
 
 #endif
