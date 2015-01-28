@@ -90,6 +90,18 @@ public:
             jaw_slider, SIGNAL(valueChanged(int)),
             m_gl_widget, SLOT(setJawHeight(int)));
 
+		height_slider = create_joint_angle_slider(
+	    "Height", GLWidget::HEIGHT_MIN, GLWidget::HEIGHT_MAX);
+        connect(
+            height_slider, SIGNAL(valueChanged(int)),
+            m_gl_widget, SLOT(setHeight(int)));
+
+		width_slider = create_joint_angle_slider(
+	    "Width", GLWidget::WIDTH_MIN, GLWidget::WIDTH_MAX);
+        connect(
+            width_slider, SIGNAL(valueChanged(int)),
+            m_gl_widget, SLOT(setWidth(int)));
+
 
         m_main_layout->addWidget(m_animate_checkbox);
         m_main_layout->addWidget(m_quit_button);
@@ -138,6 +150,9 @@ private:
 	QSlider *foot1_slider;
 	QSlider *foot2_slider;
 	QSlider *jaw_slider;
+
+	QSlider *height_slider;
+	QSlider *width_slider;
 };
 
 #endif

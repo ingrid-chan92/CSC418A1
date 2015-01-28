@@ -112,6 +112,9 @@ void GLWidget::timerEvent(QTimerEvent *)
 	
 	jaw_height = joint_rot_t * JAW_MIN + (1 - joint_rot_t) * JAW_MAX;	
 
+	height = joint_rot_t * HEIGHT_MIN + (1 - joint_rot_t) * HEIGHT_MAX;	
+	width = joint_rot_t * WIDTH_MIN + (1 - joint_rot_t) * WIDTH_MAX;	
+
     // Tell this widget to redraw itself.
     update();
 }
@@ -144,6 +147,9 @@ void GLWidget::paintGL()
 
     // Push the current transformation matrix on the stack
     transformStack().pushMatrix();
+	
+		// Horizontal/Vertical movement
+		transformStack().translate(width, height);
 
 		// Penguin body
 		transformStack().pushMatrix();

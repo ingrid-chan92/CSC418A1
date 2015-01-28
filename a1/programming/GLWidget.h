@@ -232,6 +232,11 @@ public:
 	static const int JAW_MIN = -2;
 	static const int JAW_MAX = 2;
 
+	static const int HEIGHT_MIN = -100;
+	static const int HEIGHT_MAX = 100;
+	static const int WIDTH_MIN = -100;
+	static const int WIDTH_MAX = 100;
+
     GLWidget(QWidget *parent=NULL);
 
 public slots:
@@ -300,6 +305,24 @@ public slots:
         update();
     }
 
+	void setHeight(int h)
+    {
+        // This method is called when the user changes the slider value.
+        height = h;
+
+        // Call update() to trigger a redraw.
+        update();
+    }
+
+	void setWidth(int w)
+    {
+        // This method is called when the user changes the slider value.
+        width = w;
+
+        // Call update() to trigger a redraw.
+        update();
+    }
+
     void onPressAnimate(int is_animating)
     {
         // This method is called when the user changes the animation checkbox.
@@ -340,6 +363,9 @@ private:
 	double foot1_angle;
 	double foot2_angle;
 	double jaw_height;
+	double height;
+	double width;
+
 };
 
 #endif
