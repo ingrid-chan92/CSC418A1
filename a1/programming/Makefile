@@ -1,5 +1,5 @@
 # Define name of target executable
-PROGRAM       = main
+PROGRAM       = penguin
 
 # Define the default rule when make is run without arguments
 all: $(PROGRAM)

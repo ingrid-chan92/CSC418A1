@@ -1,0 +1,27 @@
+Relevent changes:
+All relevant changes to the code can be found in GLWidget.h and GLWidget.cpp
+
+Drawing Shapes:
+In GLWidget.h, to create the polygonal Head, Body, and Wing of the Penguin, three separate GLShape objects were created (PenguinHead, PenguinBody, PenguinWing), each one creating the polygon through a combination of triangles and "rectangles". A "base rectangle" sits in the center while triangles are drawn at each side to create a whole shape. The shapes are all centered at 0,0 with hardcoded sizes so the final shape shown on screen is roughly the same scale as the default shape. The rest of the shapes were created via existing shapes in the helper code. 
+
+
+Transformation:
+The shapes are drawn and then transformed in GLWidget.cpp:PaintGL. 
+Stack Hierarchy:
+					Penguin
+					|
+		-------------------------------------
+		|			|			|			|	
+		Body		Head		Wing		Legs
+					|						|
+					Jaw						Feet
+
+The overall "Penguin" stack allows us to translate the Penguin up and down by applying transformations before nesting in Transform stacks. Since the body does not rotate, the head, wing, and legs are NOT on the body's hierarchy (Hence, not pushed onto the Body's Transform Stack). The only "nested joint" is the foot of the leg, hence, so the foot will rotate along with the leg, the foot's transform stack is pushed onto the leg's stack. The jaw is similarily nested into the Head's stack.
+
+To rotate on a hinge, the part is first translated to the hinge joint, then rotated, and finally translated so the hinge is in its intended spot. Rotation is also done after the primary scale/translate commands are applied.
+
+in GLWidget.h under "Slots", these are the functions used to update the angle of the particular shape in the animation. These merely set the value and then update the image, redrawing it. Also within GLWidget.h are the MIN/MAX values for each angle, controlling how much each shape can rotate on its hinge/move up and down. Rotations are made around the hinge of the part (Noted by the white dots)
+
+
+Animation:
+The animation functionality is implemented in GLWidget::timerEvent(QTimerEvent *) which executes periodically when the "Animation" checkbox is ticked. Movement of each joint/whole penguin is all modeled after the sinusoidal curve (Mimicking back-and-forth/up-and-down movement) using their specific MAX/MIN value to control the magnitude. 

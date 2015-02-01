@@ -234,8 +234,8 @@ public:
 
 	static const int HEIGHT_MIN = -100;
 	static const int HEIGHT_MAX = 100;
-	static const int WIDTH_MIN = -100;
-	static const int WIDTH_MAX = 100;
+	static const int WIDTH_MIN = -200;
+	static const int WIDTH_MAX = 200;
 
     GLWidget(QWidget *parent=NULL);
 

@@ -2,9 +2,9 @@
 Assignment 1 Part B Checklist/Grading sheet
 -------------------------------------------
 
-Name:       ____________________
+Name:       	Ingrid Ka-Lam Chan
 
-Student ID:  ____________________
+Student ID: 	998067871
 
 ------------------------------------------------------------------------------
 A. PLEASE ANSWER THE FOLLOWING QUESTIONS (your assignment will not be graded
@@ -15,12 +15,12 @@ A. PLEASE ANSWER THE FOLLOWING QUESTIONS (your assignment will not be graded
    Student Academic Integrity policy stated at
    http://www.artsci.utoronto.ca/osai/students/academic-integrity-basics
 
-   ___Yes   ___No
+   _X_Yes   ___No
 
 
 2. I collaborated on this assignment with another student 
 
-   ___Yes   ___No
+   ___Yes   _X_No
 
    If you checked yes, please supply the following
 
@@ -40,16 +40,16 @@ B. PLACE AN (X) IN FRONT OF PORTIONS OF THE ASSIGNMENT THAT YOU COMPLETED IN
    ETC) THE MORE LIKELY IT IS WE WILL BE ABLE TO MAKE AN ACCURATE ASSESSMENT
 
    
-___ ( 5 marks) Part 2a  Parts description & drawing
+_X_ ( 5 marks) Part 2a  Parts description & drawing
                   
-___ (10 marks) Part 2b  Parts transformation description & implementation
+_X_ (10 marks) Part 2b  Parts transformation description & implementation
 
-___ ( 8 marks) Part 2c  Animation control functions description & implementation
+_X_ ( 8 marks) Part 2c  Animation control functions description & implementation
 
-___ (15 marks) Part 2d  Hierarchical object rendering 
+_X_ (15 marks) Part 2d  Hierarchical object rendering 
                   
-___ ( 2 marks) Part 2e  Joint drawing
+_X_ ( 2 marks) Part 2e  Joint drawing
 
-___ (10 marks) Part 2f  Written report
+_X_ (10 marks) Part 2f  Written report
 
 -------------------------------------------------------------------------------
