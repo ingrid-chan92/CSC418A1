@@ -1,3 +1,5 @@
+IMPORTANT: On random, the penguin will occasionally not render. Please move the height and width sliders to make the penguin render on screen.
+
 Relevent changes:
 All relevant changes to the code can be found in GLWidget.h and GLWidget.cpp. After running Make, the executable is named "Penguin"
 
