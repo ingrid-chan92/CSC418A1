@@ -50,7 +50,6 @@
 #include "timer.h"
 #include "vector.h"
 
-
 // *************** GLOBAL VARIABLES *************************
 
 
@@ -89,7 +88,7 @@ const GLdouble NEAR_CLIP   = 0.1;
 const GLdouble FAR_CLIP    = 1000.0;
 
 // Render settings
-enum { WIREFRAME, SOLID, OUTLINED };	// README: the different render styles
+enum { WIREFRAME, SOLID, OUTLINED, METALLIC, MATTE };	// README: the different render styles
 int renderStyle = WIREFRAME;			// README: the selected render style
 
 // Animation settings
@@ -173,6 +172,8 @@ const float ELBOW_MIN            =  0.0;
 const float ELBOW_MAX            =  75.0;
 const float KNEE_MIN             = -45.0;
 const float KNEE_MAX             =  45.0;
+const float LIGHT_MIN            =  0.0;
+const float LIGHT_MAX            =  180;
 
 
 // ***********  FUNCTION HEADER DECLARATIONS ****************
@@ -687,6 +688,17 @@ void initGlui()
 	glui_render->add_radiobutton_to_group(glui_radio_group, "Wireframe");
 	glui_render->add_radiobutton_to_group(glui_radio_group, "Solid");
 	glui_render->add_radiobutton_to_group(glui_radio_group, "Solid w/ outlines");
+	glui_render->add_radiobutton_to_group(glui_radio_group, "Metallic");
+	glui_render->add_radiobutton_to_group(glui_radio_group, "Matte");
+
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "X-Angle:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::X_LIGHT));
+	glui_spinner->set_float_limits(LIGHT_MIN, LIGHT_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner->set_speed(SPINNER_SPEED * 5);
+
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "Y-Angle:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::Y_LIGHT));
+	glui_spinner->set_float_limits(LIGHT_MIN, LIGHT_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner->set_speed(SPINNER_SPEED * 5);
+		
 	//
 	// ***************************************************
 
@@ -871,6 +883,17 @@ void display(void)
 	//   rendered.
     ///////////////////////////////////////////////////////////
 
+	// Enable lighting
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	GLfloat lightpos[] = {	10 * cos ( joint_ui_data->getDOF(Keyframe::X_LIGHT) * 3.14159265 / 180.0 ), 
+							10 * cos ( joint_ui_data->getDOF(Keyframe::Y_LIGHT) * 3.14159265 / 180.0 ), 
+							0, 0.0};
+	glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
+
+	GLfloat amb[] = {0.25f, 0.25f, 0.25f, 1.0f};
+	GLfloat diff[] = {0.4f, 0.4f, 0.4f, 1.0f};
+	GLfloat spec[] = {0.774597f, 0.774597f, 0.774597f, 1.0f};
 
 	// determine render style and set glPolygonMode appropriately
 	switch (renderStyle) {
@@ -887,12 +910,32 @@ void display(void)
 			break;
 
 		case OUTLINED:
-		   	glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+
+			glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
 			glColor3f( 1.0f, 1.0f, 1.0f );
 			renderImage();
 
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		  	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);				
 			glColor3f( 0.0f, 0.0f, 0.0f );
+			renderImage();	
+			break;
+
+		case METALLIC:
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+			// Set metallic colour
+			glMaterialfv(GL_FRONT, GL_AMBIENT, amb);			
+			glMaterialfv(GL_FRONT, GL_DIFFUSE, diff);			
+			glMaterialfv(GL_FRONT, GL_SPECULAR, spec);
+			glMaterialf(GL_FRONT, GL_SHININESS, 0.6 * 128.0);
+
+			renderImage();
+
+			break;
+			
+		case MATTE:
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			glColor3f( 1.0f, 1.0f, 1.0f );
 			renderImage();
 			break;
 
@@ -929,6 +972,7 @@ void renderImage() {
 		glRotatef(joint_ui_data->getDOF(Keyframe::ROOT_ROTATE_Z), 0.0, 0.0, 1.0);
 
 		// draw body part
+		drawCube();
 		drawHead();
  		drawBody();
 
@@ -942,7 +986,7 @@ void renderImage() {
 		drawRightLeg();
 
 		drawLeftFoot();
-		drawRightFoot();
+		drawRightFoot();	
 
 	glPopMatrix();
 }
@@ -990,36 +1034,42 @@ void drawCube()
 {
 	glBegin(GL_QUADS);
 		// draw front face
+		glNormal3d(1, 0, 0);
 		glVertex3f(-1.0, -1.0, 1.0);
 		glVertex3f( 1.0, -1.0, 1.0);
 		glVertex3f( 1.0,  1.0, 1.0);
 		glVertex3f(-1.0,  1.0, 1.0);
 
 		// draw back face
+		glNormal3d(-1, 0, 0);
 		glVertex3f( 1.0, -1.0, -1.0);
 		glVertex3f(-1.0, -1.0, -1.0);
 		glVertex3f(-1.0,  1.0, -1.0);
 		glVertex3f( 1.0,  1.0, -1.0);
 
 		// draw left face
+		glNormal3d(0, 0, 1);
 		glVertex3f(-1.0, -1.0, -1.0);
 		glVertex3f(-1.0, -1.0,  1.0);
 		glVertex3f(-1.0,  1.0,  1.0);
 		glVertex3f(-1.0,  1.0, -1.0);
 
 		// draw right face
+		glNormal3d(0, 0, -1);
 		glVertex3f( 1.0, -1.0,  1.0);
 		glVertex3f( 1.0, -1.0, -1.0);
 		glVertex3f( 1.0,  1.0, -1.0);
 		glVertex3f( 1.0,  1.0,  1.0);
 
 		// draw top
+		glNormal3d(0, 1, 0);
 		glVertex3f(-1.0,  1.0,  1.0);
 		glVertex3f( 1.0,  1.0,  1.0);
 		glVertex3f( 1.0,  1.0, -1.0);
 		glVertex3f(-1.0,  1.0, -1.0);
 
 		// draw bottom
+		glNormal3d(0, -1, 0);
 		glVertex3f(-1.0, -1.0, -1.0);
 		glVertex3f( 1.0, -1.0, -1.0);
 		glVertex3f( 1.0, -1.0,  1.0);
@@ -1037,36 +1087,42 @@ void drawHead()
 
 	glBegin(GL_QUADS);
 		// draw front face
+		glNormal3d(1, 0, 0);
 		glVertex3f(-1.0, -1.0, 1.5);
 		glVertex3f( 1.0, -1.0, 1.5);
 		glVertex3f( 1.0,  1.0, 1.0);
 		glVertex3f(-1.0,  1.0, 1.0);
 
 		// draw back face
+		glNormal3d(-1, 0, 0);
 		glVertex3f( 1.0, -1.0, -2.0);
 		glVertex3f(-1.0, -1.0, -2.0);
 		glVertex3f(-1.0,  1.0, -1.0);
 		glVertex3f( 1.0,  1.0, -1.0);
 
 		// draw left face
+		glNormal3d(0, 0, 1);
 		glVertex3f(-1.0, -1.0, -2.0);
 		glVertex3f(-1.0, -1.0,  1.5);
 		glVertex3f(-1.0,  1.0,  1.0);
 		glVertex3f(-1.0,  1.0, -1.0);
 
 		// draw right face
+		glNormal3d(0, 0, -1);
 		glVertex3f( 1.0, -1.0,  1.5);
 		glVertex3f( 1.0, -1.0, -2.0);
 		glVertex3f( 1.0,  1.0, -1.0);
 		glVertex3f( 1.0,  1.0,  1.0);
 
 		// draw top
+		glNormal3d(0, 1, 0);
 		glVertex3f(-1.0,  1.0,  1.0);
 		glVertex3f( 1.0,  1.0,  1.0);
 		glVertex3f( 1.0,  1.0, -1.0);
 		glVertex3f(-1.0,  1.0, -1.0);
 
 		// draw bottom
+		glNormal3d(0, -1, 0);
 		glVertex3f(-1.0, -1.0, -2.0);
 		glVertex3f( 1.0, -1.0, -2.0);
 		glVertex3f( 1.0, -1.0,  1.5);
@@ -1087,36 +1143,42 @@ void drawBody()
 
 	glBegin(GL_QUADS);
 		// draw front face
+		glNormal3d(1, 0, 0);
 		glVertex3f(-1.0, -1.0, 1.0);
 		glVertex3f( 1.0, -1.0, 1.0);
 		glVertex3f( 1.0,  1.0, 0.75);
 		glVertex3f(-1.0,  1.0, 0.75);
 
 		// draw back face
+		glNormal3d(-1, 0, 0);
 		glVertex3f( 1.0, -1.0, -1.5);
 		glVertex3f(-1.0, -1.0, -1.5);
 		glVertex3f(-1.0,  1.0, -0.75);
 		glVertex3f( 1.0,  1.0, -0.75);
 
 		// draw left face
+		glNormal3d(0, 0, 1);
 		glVertex3f(-1.0, -1.0, -1.5);
 		glVertex3f(-1.0, -1.0,  1.0);
 		glVertex3f(-1.0,  1.0,  0.75);
 		glVertex3f(-1.0,  1.0, -0.75);
 
 		// draw right face
+		glNormal3d(0, 0, -1);
 		glVertex3f( 1.0, -1.0,  1.0);
 		glVertex3f( 1.0, -1.0, -1.5);
 		glVertex3f( 1.0,  1.0, -0.75);
 		glVertex3f( 1.0,  1.0,  0.75);
 
 		// draw top
+		glNormal3d(0, 1, 0);
 		glVertex3f(-1.0,  1.0,  0.75);
 		glVertex3f( 1.0,  1.0,  0.75);
 		glVertex3f( 1.0,  1.0, -0.75);
 		glVertex3f(-1.0,  1.0, -0.75);
 
 		// draw bottom
+		glNormal3d(0, -1, 0);
 		glVertex3f(-1.0, -1.0, -1.5);
 		glVertex3f( 1.0, -1.0, -1.5);
 		glVertex3f( 1.0, -1.0,  1.0);
@@ -1265,36 +1327,42 @@ void drawRightFoot() {
 void drawElbow() {
 	glBegin(GL_QUADS);
 		// draw front face
+		glNormal3d(1, 0, 0);
 		glVertex3f(-1.0, -0.25, 0.5);
 		glVertex3f( 1.0, -0.25, 0.5);
 		glVertex3f( 1.0,  0.75, 0.75);
 		glVertex3f(-1.0,  0.75, 0.75);
 
 		// draw back face
+		glNormal3d(-1, 0, 0);
 		glVertex3f( 1.0, -0.25, -0.5);
 		glVertex3f(-1.0, -0.25, -0.5);
 		glVertex3f(-1.0,  0.75, -0.75);
 		glVertex3f( 1.0,  0.75, -0.75);
 
 		// draw left face
+		glNormal3d(0, 0, 1);
 		glVertex3f(-1.0, -0.25, -0.5);
 		glVertex3f(-1.0, -0.25,  0.5);
 		glVertex3f(-1.0,  0.75,  0.75);
 		glVertex3f(-1.0,  0.75, -0.75);
 
 		// draw right face
+		glNormal3d(0, 0, -1);
 		glVertex3f( 1.0, -0.25,  0.5);
 		glVertex3f( 1.0, -0.25, -0.5);
 		glVertex3f( 1.0,  0.75, -0.75);
 		glVertex3f( 1.0,  0.75,  0.75);
 
 		// draw top
+		glNormal3d(0, 1, 0);
 		glVertex3f(-1.0,  0.75,  0.75);
 		glVertex3f( 1.0,  0.75,  0.75);
 		glVertex3f( 1.0,  0.75, -0.75);
 		glVertex3f(-1.0,  0.75, -0.75);
 
 		// draw bottom
+		glNormal3d(0, -1, 0);
 		glVertex3f(-1.0, -0.25, -0.5);
 		glVertex3f( 1.0, -0.25, -0.5);
 		glVertex3f( 1.0, -0.25,  0.5);
@@ -1305,36 +1373,42 @@ void drawElbow() {
 void drawShoulder() {	
 	glBegin(GL_QUADS);
 		// draw front face
+		glNormal3d(1, 0, 0);
 		glVertex3f(-1.0, -1.0, 0.75);
 		glVertex3f( 1.0, -1.0, 0.75);
 		glVertex3f( 1.0,  1.0, 1.0);
 		glVertex3f(-1.0,  1.0, 1.0);
 
 		// draw back face
+		glNormal3d(-1, 0, 0);
 		glVertex3f( 1.0, -1.0, -0.75);
 		glVertex3f(-1.0, -1.0, -0.75);
 		glVertex3f(-1.0,  1.0, -1.0);
 		glVertex3f( 1.0,  1.0, -1.0);
 
 		// draw left face
+		glNormal3d(0, 0, 1);
 		glVertex3f(-1.0, -1.0, -0.75);
 		glVertex3f(-1.0, -1.0,  0.75);
 		glVertex3f(-1.0,  1.0,  1.0);
 		glVertex3f(-1.0,  1.0, -1.0);
 
 		// draw right face
+		glNormal3d(0, 0, -1);
 		glVertex3f( 1.0, -1.0,  0.75);
 		glVertex3f( 1.0, -1.0, -0.75);
 		glVertex3f( 1.0,  1.0, -1.0);
 		glVertex3f( 1.0,  1.0,  1.0);
 
 		// draw top
+		glNormal3d(0, 1, 0);
 		glVertex3f(-1.0,  1.0,  1.0);
 		glVertex3f( 1.0,  1.0,  1.0);
 		glVertex3f( 1.0,  1.0, -0.75);
 		glVertex3f(-1.0,  1.0, -0.75);
 
 		// draw bottom
+		glNormal3d(0, -1, 0);
 		glVertex3f(-1.0, -1.0, -0.75);
 		glVertex3f( 1.0, -1.0, -0.75);
 		glVertex3f( 1.0, -1.0,  0.75);
@@ -1352,36 +1426,42 @@ void drawBeak()
 	// Draw top beak
 	glBegin(GL_QUADS);
 		// draw front face
+		glNormal3d(1, 0, 0);
 		glVertex3f(-1.0, -1.0, 1.0);
 		glVertex3f( 1.0, -1.0, 1.0);
 		glVertex3f( 1.0,  1.0, 1.0);
 		glVertex3f(-1.0,  1.0, 1.0);
 
 		// draw back face
+		glNormal3d(-1, 0, 0);
 		glVertex3f( 1.0, -1.0, -1.0);
 		glVertex3f(-1.0, -1.0, -1.0);
 		glVertex3f(-1.0,  1.0, -1.0);
 		glVertex3f( 1.0,  1.0, -1.0);
 
 		// draw left face
+		glNormal3d(0, 0, 1);
 		glVertex3f(-1.0, -1.0, -1.0);
 		glVertex3f(-1.0, -1.0,  1.0);
 		glVertex3f(-1.0,  1.0,  1.0);
 		glVertex3f(-1.0,  1.0, -1.0);
 
 		// draw right face
+		glNormal3d(0, 0, -1);
 		glVertex3f( 1.0, -1.0,  1.0);
 		glVertex3f( 1.0, -1.0, -1.0);
 		glVertex3f( 1.0,  1.0, -1.0);
 		glVertex3f( 1.0,  1.0,  1.0);
 
 		// draw top
+		glNormal3d(0, 1, 0);
 		glVertex3f(-1.0,  1.0,  1.0);
 		glVertex3f( 1.0,  1.0,  1.0);
 		glVertex3f( 1.0,  1.0, -1.0);
 		glVertex3f(-1.0,  1.0, -1.0);
 
 		// draw bottom
+		glNormal3d(0, -1, 0);
 		glVertex3f(-1.0, -1.0, -1.0);
 		glVertex3f( 1.0, -1.0, -1.0);
 		glVertex3f( 1.0, -1.0,  1.0);
@@ -1394,36 +1474,42 @@ void drawBeak()
 
 	glBegin(GL_QUADS);
 		// draw front face
+		glNormal3d(1, 0, 0);
 		glVertex3f(-1.0, -1.0, 1.0);
 		glVertex3f( 1.0, -1.0, 1.0);
 		glVertex3f( 1.0,  1.0, 1.0);
 		glVertex3f(-1.0,  1.0, 1.0);
 
 		// draw back face
+		glNormal3d(-1, 0, 0);
 		glVertex3f( 1.0, -1.0, -1.0);
 		glVertex3f(-1.0, -1.0, -1.0);
 		glVertex3f(-1.0,  1.0, -1.0);
 		glVertex3f( 1.0,  1.0, -1.0);
 
 		// draw left face
+		glNormal3d(0, 0, 1);
 		glVertex3f(-1.0, -1.0, -1.0);
 		glVertex3f(-1.0, -1.0,  1.0);
 		glVertex3f(-1.0,  1.0,  1.0);
 		glVertex3f(-1.0,  1.0, -1.0);
 
 		// draw right face
+		glNormal3d(0, 0, -1);
 		glVertex3f( 1.0, -1.0,  1.0);
 		glVertex3f( 1.0, -1.0, -1.0);
 		glVertex3f( 1.0,  1.0, -1.0);
 		glVertex3f( 1.0,  1.0,  1.0);
 
 		// draw top
+		glNormal3d(0, 1, 0);
 		glVertex3f(-1.0,  1.0,  1.0);
 		glVertex3f( 1.0,  1.0,  1.0);
 		glVertex3f( 1.0,  1.0, -1.0);
 		glVertex3f(-1.0,  1.0, -1.0);
 
 		// draw bottom
+		glNormal3d(0, -1, 0);
 		glVertex3f(-1.0, -1.0, -1.0);
 		glVertex3f( 1.0, -1.0, -1.0);
 		glVertex3f( 1.0, -1.0,  1.0);
