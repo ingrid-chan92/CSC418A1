@@ -165,14 +165,14 @@ const float HIP_PITCH_MIN        = -45.0;
 const float HIP_PITCH_MAX        =  45.0;
 const float HIP_YAW_MIN          = -45.0;
 const float HIP_YAW_MAX          =  45.0;
-const float HIP_ROLL_MIN         = -45.0;
-const float HIP_ROLL_MAX         =  45.0;
+const float HIP_ROLL_MIN         = -30.0;
+const float HIP_ROLL_MAX         =  30.0;
 const float BEAK_MIN             =  0.0;
 const float BEAK_MAX             =  0.5;
 const float ELBOW_MIN            =  0.0;
-const float ELBOW_MAX            = 75.0;
-const float KNEE_MIN             =  0.0;
-const float KNEE_MAX             = 75.0;
+const float ELBOW_MAX            =  75.0;
+const float KNEE_MIN             = -45.0;
+const float KNEE_MAX             =  45.0;
 
 
 // ***********  FUNCTION HEADER DECLARATIONS ****************
@@ -209,7 +209,12 @@ void drawRightShoulder();
 void drawElbow();
 void drawLeftElbow();
 void drawRightElbow();
-void drawLeg();
+
+void drawLeftLeg();
+void drawRightLeg();
+
+void drawLeftFoot(); 
+void drawRightFoot();
 
 // Image functions
 void writeFrame(char* filename, bool pgm, bool frontBuffer);
@@ -926,11 +931,18 @@ void renderImage() {
 		// draw body part
 		drawHead();
  		drawBody();
-		drawLeftShoulder();
-		drawLeftElbow();
+
+		drawLeftShoulder();		
 		drawRightShoulder();
+
+		drawLeftElbow();
 		drawRightElbow();
-		//drawLeg();
+
+		drawLeftLeg();
+		drawRightLeg();
+
+		drawLeftFoot();
+		drawRightFoot();
 
 	glPopMatrix();
 }
@@ -971,7 +983,6 @@ void motion(int x, int y)
 		glutPostRedisplay();
 	}
 }
-
 
 // Draw a unit cube, centered at the current location
 // README: Helper code for drawing a cube
@@ -1185,9 +1196,70 @@ void drawRightElbow()
 	glPopMatrix();
 }
 
-void drawLeg()
+void drawLeftLeg()
 {
+	glPushMatrix();
 
+	glTranslatef(0.0f, -1.0f, 0.0f);
+	glRotatef(joint_ui_data->getDOF(Keyframe::L_HIP_PITCH), 1.0, 0.0, 0.0);
+	glRotatef(-joint_ui_data->getDOF(Keyframe::L_HIP_YAW), 0.0, 1.0, 0.0);
+	glRotatef(-joint_ui_data->getDOF(Keyframe::L_HIP_ROLL), 0.0, 0.0, 1.0);
+	glTranslatef(-0.25f, -1.5f, 0.0f);
+
+	glScalef(0.15f, 0.75f, 0.15f);
+	drawCube();
+
+	glPopMatrix();
+}
+
+void drawRightLeg()
+{
+	glPushMatrix();
+
+	glTranslatef(0.0f, -1.0f, 0.0f);
+	glRotatef(joint_ui_data->getDOF(Keyframe::R_HIP_PITCH), 1.0, 0.0, 0.0);
+	glRotatef(joint_ui_data->getDOF(Keyframe::R_HIP_YAW), 0.0, 1.0, 0.0);
+	glRotatef(joint_ui_data->getDOF(Keyframe::R_HIP_ROLL), 0.0, 0.0, 1.0);
+	glTranslatef(0.25f, -1.5f, 0.0f);
+
+	glScalef(0.15f, 0.75f, 0.15f);
+	drawCube();
+
+	glPopMatrix();
+}
+
+void drawLeftFoot() {
+	glPushMatrix();
+
+	glTranslatef(0.0f, -1.0f, 0.0f);
+	glRotatef(joint_ui_data->getDOF(Keyframe::L_HIP_PITCH), 1.0, 0.0, 0.0);
+	glRotatef(-joint_ui_data->getDOF(Keyframe::L_HIP_YAW), 0.0, 1.0, 0.0);
+	glRotatef(-joint_ui_data->getDOF(Keyframe::L_HIP_ROLL), 0.0, 0.0, 1.0);
+	glTranslatef(-0.25f, -2.25f, 0.0f);
+	glRotatef(joint_ui_data->getDOF(Keyframe::L_KNEE), 1.0, 0.0, 0.0);
+	glTranslatef(0.0f, 0.0f, -0.25f);
+	
+	glScalef(0.15f, 0.15f, 0.5f);
+	drawCube();
+
+	glPopMatrix();
+}
+
+void drawRightFoot() {
+	glPushMatrix();
+
+	glTranslatef(0.0f, -1.0f, 0.0f);
+	glRotatef(joint_ui_data->getDOF(Keyframe::R_HIP_PITCH), 1.0, 0.0, 0.0);
+	glRotatef(joint_ui_data->getDOF(Keyframe::R_HIP_YAW), 0.0, 1.0, 0.0);
+	glRotatef(joint_ui_data->getDOF(Keyframe::R_HIP_ROLL), 0.0, 0.0, 1.0);
+	glTranslatef(0.25f, -2.25f, 0.0f);
+	glRotatef(joint_ui_data->getDOF(Keyframe::R_KNEE), 1.0, 0.0, 0.0);
+	glTranslatef(0.0f, 0.0f, -0.25f);
+
+	glScalef(0.15f, 0.15f, 0.5f);
+	drawCube();
+
+	glPopMatrix();
 }
 
 void drawElbow() {
