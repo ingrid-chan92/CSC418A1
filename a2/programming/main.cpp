@@ -323,13 +323,53 @@ void updateKeyframeButton(int)
 	///////////////////////////////////////////////////////////
 
 	// Get the keyframe ID from the UI
-	int keyframeID = 0;
+	int keyframeID = *(joint_ui_data->getIDPtr());	
+	float time = *(joint_ui_data->getTimePtr());
 
 	// Update the 'maxValidKeyframe' index variable
 	// (it will be needed when doing the interpolation)
+	maxValidKeyframe++;
+	frameNumber++;
 
 	// Update the appropriate entry in the 'keyframes' array
 	// with the 'joint_ui_data' data
+	keyframes[keyframeID].setID(keyframeID); 
+	keyframes[keyframeID].setTime(time); 
+
+	keyframes[keyframeID].setDOF(Keyframe::ROOT_TRANSLATE_X, joint_ui_data->getDOF(Keyframe::ROOT_TRANSLATE_X));
+	keyframes[keyframeID].setDOF(Keyframe::ROOT_TRANSLATE_Y, joint_ui_data->getDOF(Keyframe::ROOT_TRANSLATE_Y));
+	keyframes[keyframeID].setDOF(Keyframe::ROOT_TRANSLATE_Z, joint_ui_data->getDOF(Keyframe::ROOT_TRANSLATE_Z));
+
+	keyframes[keyframeID].setDOF(Keyframe::ROOT_ROTATE_X, joint_ui_data->getDOF(Keyframe::ROOT_ROTATE_X));
+	keyframes[keyframeID].setDOF(Keyframe::ROOT_ROTATE_Y, joint_ui_data->getDOF(Keyframe::ROOT_ROTATE_Y));
+	keyframes[keyframeID].setDOF(Keyframe::ROOT_ROTATE_Z, joint_ui_data->getDOF(Keyframe::ROOT_ROTATE_Z));
+
+	keyframes[keyframeID].setDOF(Keyframe::HEAD, joint_ui_data->getDOF(Keyframe::HEAD));
+
+	keyframes[keyframeID].setDOF(Keyframe::R_SHOULDER_PITCH, joint_ui_data->getDOF(Keyframe::R_SHOULDER_PITCH));
+	keyframes[keyframeID].setDOF(Keyframe::R_SHOULDER_YAW, joint_ui_data->getDOF(Keyframe::R_SHOULDER_YAW));
+	keyframes[keyframeID].setDOF(Keyframe::R_SHOULDER_ROLL, joint_ui_data->getDOF(Keyframe::R_SHOULDER_ROLL));
+
+	keyframes[keyframeID].setDOF(Keyframe::L_SHOULDER_PITCH, joint_ui_data->getDOF(Keyframe::L_SHOULDER_PITCH));
+	keyframes[keyframeID].setDOF(Keyframe::L_SHOULDER_YAW, joint_ui_data->getDOF(Keyframe::L_SHOULDER_YAW));
+	keyframes[keyframeID].setDOF(Keyframe::L_SHOULDER_ROLL, joint_ui_data->getDOF(Keyframe::L_SHOULDER_ROLL));
+
+	keyframes[keyframeID].setDOF(Keyframe::R_HIP_PITCH, joint_ui_data->getDOF(Keyframe::R_HIP_PITCH));
+	keyframes[keyframeID].setDOF(Keyframe::R_HIP_YAW, joint_ui_data->getDOF(Keyframe::R_HIP_YAW));
+	keyframes[keyframeID].setDOF(Keyframe::R_HIP_ROLL, joint_ui_data->getDOF(Keyframe::R_HIP_ROLL));
+
+	keyframes[keyframeID].setDOF(Keyframe::L_HIP_PITCH, joint_ui_data->getDOF(Keyframe::L_HIP_PITCH));
+	keyframes[keyframeID].setDOF(Keyframe::L_HIP_YAW, joint_ui_data->getDOF(Keyframe::L_HIP_YAW));
+	keyframes[keyframeID].setDOF(Keyframe::L_HIP_ROLL, joint_ui_data->getDOF(Keyframe::L_HIP_ROLL));
+
+	keyframes[keyframeID].setDOF(Keyframe::BEAK, joint_ui_data->getDOF(Keyframe::BEAK));
+
+	keyframes[keyframeID].setDOF(Keyframe::R_ELBOW, joint_ui_data->getDOF(Keyframe::R_ELBOW));
+	keyframes[keyframeID].setDOF(Keyframe::L_ELBOW, joint_ui_data->getDOF(Keyframe::L_ELBOW));
+
+	keyframes[keyframeID].setDOF(Keyframe::R_KNEE, joint_ui_data->getDOF(Keyframe::R_KNEE));
+	keyframes[keyframeID].setDOF(Keyframe::L_KNEE, joint_ui_data->getDOF(Keyframe::L_KNEE));
+	
 
 	// Let the user know the values have been updated
 	sprintf(msg, "Status: Keyframe %d updated successfully", keyframeID);
