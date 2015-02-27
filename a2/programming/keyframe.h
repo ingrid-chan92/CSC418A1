@@ -42,8 +42,7 @@ public:
 		   L_ELBOW,
 		   R_KNEE,
 		   L_KNEE,
-		   X_LIGHT,
-		   Y_LIGHT,
+		   LIGHT_ANGLE,
 		   NUM_JOINT_ENUM };
 
 	// constructor

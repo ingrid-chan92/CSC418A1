@@ -173,7 +173,7 @@ const float ELBOW_MAX            =  75.0;
 const float KNEE_MIN             = -45.0;
 const float KNEE_MAX             =  45.0;
 const float LIGHT_MIN            =  0.0;
-const float LIGHT_MAX            =  180;
+const float LIGHT_MAX            =  360;
 
 
 // ***********  FUNCTION HEADER DECLARATIONS ****************
@@ -731,11 +731,7 @@ void initGlui()
 	glui_render->add_radiobutton_to_group(glui_radio_group, "Metallic");
 	glui_render->add_radiobutton_to_group(glui_radio_group, "Matte");
 
-	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "X-Angle:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::X_LIGHT));
-	glui_spinner->set_float_limits(LIGHT_MIN, LIGHT_MAX, GLUI_LIMIT_CLAMP);
-	glui_spinner->set_speed(SPINNER_SPEED * 5);
-
-	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "Y-Angle:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::Y_LIGHT));
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "Light Angle:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::LIGHT_ANGLE));
 	glui_spinner->set_float_limits(LIGHT_MIN, LIGHT_MAX, GLUI_LIMIT_CLAMP);
 	glui_spinner->set_speed(SPINNER_SPEED * 5);
 		
@@ -926,9 +922,9 @@ void display(void)
 	// Enable lighting
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
-	GLfloat lightpos[] = {	10 * cos ( joint_ui_data->getDOF(Keyframe::X_LIGHT) * 3.14159265 / 180.0 ), 
-							10 * cos ( joint_ui_data->getDOF(Keyframe::Y_LIGHT) * 3.14159265 / 180.0 ), 
-							0, 0.0};
+	GLfloat lightpos[] = {	10 * cos ( joint_ui_data->getDOF(Keyframe::LIGHT_ANGLE) * 3.14159265 / 180.0 ), 
+				10 * sin ( joint_ui_data->getDOF(Keyframe::LIGHT_ANGLE) * 3.14159265 / 180.0 ), 
+				0, 0.0};
 	glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
 
 	GLfloat amb[] = {0.25f, 0.25f, 0.25f, 1.0f};
