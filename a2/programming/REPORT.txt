@@ -18,7 +18,7 @@ NOTE: The light is pointing in from the "Left" of the screen, hence why the Peng
 
 
 Part 2e     Keyframe functionality & supplied keyframe file
-Main modifications can be found in updateKeyframeButton(). At this function, keyframeID, Time, and DOFs of the current frame are recorded into keyframes[keyframeID]. Nothing particularly notable here, simply recording values into a storage array
+Main modifications can be found in updateKeyframeButton(). At this function, keyframeID, Time, and DOFs of the current frame are recorded into keyframes[keyframeID]. When updating old frames, no change will be made to maxValidKeyframe. Only when a new frame is added will maxValidKeyframe be updated. When no frames have been set and "Save Keyframes to File" is pressed, the keyframes.txt saved will contain a "-1" and nothing else.
 
 IMPORTANT: The Keyframe sample file has been labelled "SampleKeyframes.txt". The other Keyframes.txt is the version included with the assignment tar.gz
 
