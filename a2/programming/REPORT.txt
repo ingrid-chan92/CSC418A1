@@ -1,0 +1,26 @@
+Part 2a     3D penguin design
+Relevant code can be found in renderImage(). The actual drawing of each penguin part can be found in the draw*() methods. Each method pushes a matrix onto the stack before rendering the shape so each part has its own local coordinates.
+
+The only nested joint in the Penguin is the Beak->Head. All other joints are not nested and are instead rotated/translated both its own rotation plus it's parent rotation. E.g. For the Left foot, its parent's rotations are applied to it before its own single DOF angle is applied
+
+                  
+Part 2b     Basic polygon rendering
+Basic polgygon rendering is handled in display() using a switch statement to chose between render types. Wireframe and Fill are done simply by setting the PolygonMode. Solid with Outline is done by rendering Fill with a offset away from camera and then rendering the wireframe. Notably, GL_DEPTH_TEST is enabled for Solid with Outline to apply the polygon offset. Wireframe is the only one that disables the light. The light is enabled solely to make the model easier to distinguish.
+
+
+Part 2c     Rendering metallic and matte penguin
+-
+
+Part 2d     Light source control
+A light has been added in the X-Y plane, rotating in a circle with radius 20. This light can be moved in a circle using the "Light Angle" setting found in the "Render Control" menu. This light is drawn in display() prior to the penguin being rendered. 
+
+NOTE: The light is pointing in from the "Left" of the screen, hence why the Penguin is dark when it is as (0, 0, 0) rotation.
+
+
+Part 2e     Keyframe functionality & supplied keyframe file
+Main modifications can be found in updateKeyframeButton(). At this function, keyframeID, Time, and DOFs of the current frame are recorded into keyframes[keyframeID]. Nothing particularly notable here, simply recording values into a storage array
+
+
+Part 2f     Catmull-Rom interpolation functionality
+
+

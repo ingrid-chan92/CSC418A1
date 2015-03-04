@@ -99,7 +99,7 @@ const char filenameKF[] = "keyframes.txt";	// file for loading / saving keyframe
 
 Keyframe* keyframes;			// list of keyframes
 
-int maxValidKeyframe   = 0;		// index of max VALID keyframe (in keyframe list)
+int maxValidKeyframe   = -1;		// index of max VALID keyframe (in keyframe list)
 const int KEYFRAME_MIN = 0;
 const int KEYFRAME_MAX = 32;	// README: specifies the max number of keyframes
 
@@ -328,8 +328,10 @@ void updateKeyframeButton(int)
 
 	// Update the 'maxValidKeyframe' index variable
 	// (it will be needed when doing the interpolation)
-	maxValidKeyframe++;
-	frameNumber++;
+	if (keyframeID > maxValidKeyframe) {
+		maxValidKeyframe++;
+		frameNumber++;
+	}
 
 	// Update the appropriate entry in the 'keyframes' array
 	// with the 'joint_ui_data' data
@@ -855,7 +857,7 @@ void reshape(int w, int h)
 
 // display callback
 //
-// README: This gets called by the event handler
+// TODO: This gets called by the event handler
 // to draw the scene, so this is where you need
 // to build your scene -- make your changes and
 // additions here. All rendering happens in this
@@ -874,12 +876,10 @@ void display(void)
 	// Specify camera transformation
 	glTranslatef(camXPos, camYPos, camZPos);
 
-
 	// Get the time for the current animation step, if necessary
 	if( animate_mode )
 	{
 		float curTime = animationTimer->elapsed();
-
 		if( curTime >= keyframes[maxValidKeyframe].getTime() )
 		{
 			// Restart the animation
@@ -919,6 +919,15 @@ void display(void)
 	//   rendered.
     ///////////////////////////////////////////////////////////
 
+	// Ambient/Diff/Spec Lighting and Material
+	GLfloat specularLight[] = {1.0, 1.0, 1.0};
+	GLfloat ambientLight[] = {0.0, 0.0, 0.0};
+	GLfloat diffuseLight[] = {1.0, 1.0, 1.0};
+
+	GLfloat amb[] = {0.25f, 0.25f, 0.25f, 1.0f};
+	GLfloat diff[] = {0.4f, 0.4f, 0.4f, 1.0f};
+	GLfloat spec[] = {0.774597f, 0.774597f, 0.774597f, 1.0f};
+
 	// Enable Material
 	glEnable(GL_COLOR_MATERIAL);
 
@@ -935,10 +944,6 @@ void display(void)
 				20 * sin ( joint_ui_data->getDOF(Keyframe::LIGHT_ANGLE) * 3.14159265 / 180.0 ), 
 				0, 0.0};
 	glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
-
-	GLfloat amb[] = {0.25f, 0.25f, 0.25f, 1.0f};
-	GLfloat diff[] = {0.4f, 0.4f, 0.4f, 1.0f};
-	GLfloat spec[] = {0.774597f, 0.774597f, 0.774597f, 1.0f};
 
 	// determine render style and set glPolygonMode appropriately
 	switch (renderStyle) {
@@ -970,6 +975,10 @@ void display(void)
 			break;
 
 		case METALLIC:
+			glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
+			glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);
+			glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
+
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 			// Set metallic colour

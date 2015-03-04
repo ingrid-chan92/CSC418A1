@@ -49,6 +49,6 @@ _X_   ( 5 points) Part 2e     Keyframe functionality & supplied keyframe file
 
 ___   ( 5 points) Part 2f     Catmull-Rom interpolation functionality
 
-___   ( 5 points) Part 2g     Written report
+_X_   ( 5 points) Part 2g     Written report
 
 -------------------------------------------------------------------------------- 
