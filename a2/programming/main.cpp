@@ -919,6 +919,9 @@ void display(void)
 	//   rendered.
     ///////////////////////////////////////////////////////////
 
+	// Enable Material
+	glEnable(GL_COLOR_MATERIAL);
+
 	// Depth enable
 	glEnable(GL_DEPTH_TEST);
 	glDepthMask(GL_TRUE);
@@ -928,8 +931,8 @@ void display(void)
 	// Enable lighting
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
-	GLfloat lightpos[] = {	10 * cos ( joint_ui_data->getDOF(Keyframe::LIGHT_ANGLE) * 3.14159265 / 180.0 ), 
-				10 * sin ( joint_ui_data->getDOF(Keyframe::LIGHT_ANGLE) * 3.14159265 / 180.0 ), 
+	GLfloat lightpos[] = {	20 * cos ( joint_ui_data->getDOF(Keyframe::LIGHT_ANGLE) * 3.14159265 / 180.0 ), 
+				20 * sin ( joint_ui_data->getDOF(Keyframe::LIGHT_ANGLE) * 3.14159265 / 180.0 ), 
 				0, 0.0};
 	glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
 
@@ -940,14 +943,16 @@ void display(void)
 	// determine render style and set glPolygonMode appropriately
 	switch (renderStyle) {
 		case WIREFRAME:	
+			glDisable(GL_LIGHTING);
+
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 			glColor3f( 0.0f, 0.0f, 0.0f );
 			renderImage();
 			break;
 
-		case SOLID:		
+		case SOLID:	
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-			glColor3f( 1.0f, 1.0f, 1.0f );
+			glColor3f( 0.0f, 1.0f, 1.0f );
 			renderImage();
 			break;
 
@@ -955,7 +960,7 @@ void display(void)
 			glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
 			glEnable(GL_POLYGON_OFFSET_FILL);
 			glPolygonOffset( 1.0f, 1.0f );
-			glColor3f( 1.0f, 1.0f, 1.0f );
+			glColor3f( 0.0f, 1.0f, 1.0f );
 			renderImage();		
 			glDisable(GL_POLYGON_OFFSET_FILL);
 
@@ -972,7 +977,6 @@ void display(void)
 			glMaterialfv(GL_FRONT, GL_DIFFUSE, diff);			
 			glMaterialfv(GL_FRONT, GL_SPECULAR, spec);
 			glMaterialf(GL_FRONT, GL_SHININESS, 0.6 * 128.0);
-
 			renderImage();
 
 			break;
