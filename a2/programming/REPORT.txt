@@ -20,6 +20,8 @@ NOTE: The light is pointing in from the "Left" of the screen, hence why the Peng
 Part 2e     Keyframe functionality & supplied keyframe file
 Main modifications can be found in updateKeyframeButton(). At this function, keyframeID, Time, and DOFs of the current frame are recorded into keyframes[keyframeID]. Nothing particularly notable here, simply recording values into a storage array
 
+IMPORTANT: The Keyframe sample file has been labelled "SampleKeyframes.txt". The other Keyframes.txt is the version included with the assignment tar.gz
+
 
 Part 2f     Catmull-Rom interpolation functionality
 
