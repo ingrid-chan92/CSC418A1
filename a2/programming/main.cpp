@@ -919,6 +919,12 @@ void display(void)
 	//   rendered.
     ///////////////////////////////////////////////////////////
 
+	// Depth enable
+	glEnable(GL_DEPTH_TEST);
+	glDepthMask(GL_TRUE);
+	glDepthFunc(GL_LEQUAL);
+	glDepthRange(-1.0f, 1.0f);
+
 	// Enable lighting
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
@@ -933,23 +939,25 @@ void display(void)
 
 	// determine render style and set glPolygonMode appropriately
 	switch (renderStyle) {
-		case WIREFRAME:			
+		case WIREFRAME:	
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 			glColor3f( 0.0f, 0.0f, 0.0f );
 			renderImage();
 			break;
 
-		case SOLID:			
+		case SOLID:		
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 			glColor3f( 1.0f, 1.0f, 1.0f );
 			renderImage();
 			break;
 
 		case OUTLINED:
-
 			glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+			glEnable(GL_POLYGON_OFFSET_FILL);
+			glPolygonOffset( 1.0f, 1.0f );
 			glColor3f( 1.0f, 1.0f, 1.0f );
-			renderImage();
+			renderImage();		
+			glDisable(GL_POLYGON_OFFSET_FILL);
 
 		  	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);				
 			glColor3f( 0.0f, 0.0f, 0.0f );
@@ -1008,7 +1016,7 @@ void renderImage() {
 		glRotatef(joint_ui_data->getDOF(Keyframe::ROOT_ROTATE_Z), 0.0, 0.0, 1.0);
 
 		// draw body part
-		drawCube();
+		// drawCube();
 		drawHead();
  		drawBody();
 
@@ -1070,42 +1078,42 @@ void drawCube()
 {
 	glBegin(GL_QUADS);
 		// draw front face
-		glNormal3d(1, 0, 0);
+		glNormal3d(0, 0, -1);
 		glVertex3f(-1.0, -1.0, 1.0);
 		glVertex3f( 1.0, -1.0, 1.0);
 		glVertex3f( 1.0,  1.0, 1.0);
 		glVertex3f(-1.0,  1.0, 1.0);
 
 		// draw back face
-		glNormal3d(-1, 0, 0);
+		glNormal3d(0, 0, 1);
 		glVertex3f( 1.0, -1.0, -1.0);
 		glVertex3f(-1.0, -1.0, -1.0);
 		glVertex3f(-1.0,  1.0, -1.0);
 		glVertex3f( 1.0,  1.0, -1.0);
 
 		// draw left face
-		glNormal3d(0, 0, 1);
+		glNormal3d(1, 0, 0);
 		glVertex3f(-1.0, -1.0, -1.0);
 		glVertex3f(-1.0, -1.0,  1.0);
 		glVertex3f(-1.0,  1.0,  1.0);
 		glVertex3f(-1.0,  1.0, -1.0);
 
 		// draw right face
-		glNormal3d(0, 0, -1);
+		glNormal3d(-1, 0, 0);
 		glVertex3f( 1.0, -1.0,  1.0);
 		glVertex3f( 1.0, -1.0, -1.0);
 		glVertex3f( 1.0,  1.0, -1.0);
 		glVertex3f( 1.0,  1.0,  1.0);
 
 		// draw top
-		glNormal3d(0, 1, 0);
+		glNormal3d(0, -1, 0);
 		glVertex3f(-1.0,  1.0,  1.0);
 		glVertex3f( 1.0,  1.0,  1.0);
 		glVertex3f( 1.0,  1.0, -1.0);
 		glVertex3f(-1.0,  1.0, -1.0);
 
 		// draw bottom
-		glNormal3d(0, -1, 0);
+		glNormal3d(0, 1, 0);
 		glVertex3f(-1.0, -1.0, -1.0);
 		glVertex3f( 1.0, -1.0, -1.0);
 		glVertex3f( 1.0, -1.0,  1.0);
@@ -1123,28 +1131,28 @@ void drawHead()
 
 	glBegin(GL_QUADS);
 		// draw front face
-		glNormal3d(1, 0, 0);
+		glNormal3d(0, 0, -1);
 		glVertex3f(-1.0, -1.0, 1.5);
 		glVertex3f( 1.0, -1.0, 1.5);
 		glVertex3f( 1.0,  1.0, 1.0);
 		glVertex3f(-1.0,  1.0, 1.0);
 
 		// draw back face
-		glNormal3d(-1, 0, 0);
+		glNormal3d(0, 0, 1);
 		glVertex3f( 1.0, -1.0, -2.0);
 		glVertex3f(-1.0, -1.0, -2.0);
 		glVertex3f(-1.0,  1.0, -1.0);
 		glVertex3f( 1.0,  1.0, -1.0);
 
 		// draw left face
-		glNormal3d(0, 0, 1);
+		glNormal3d(1, 0, 0);
 		glVertex3f(-1.0, -1.0, -2.0);
 		glVertex3f(-1.0, -1.0,  1.5);
 		glVertex3f(-1.0,  1.0,  1.0);
 		glVertex3f(-1.0,  1.0, -1.0);
 
 		// draw right face
-		glNormal3d(0, 0, -1);
+		glNormal3d(-1, 0, 0);
 		glVertex3f( 1.0, -1.0,  1.5);
 		glVertex3f( 1.0, -1.0, -2.0);
 		glVertex3f( 1.0,  1.0, -1.0);
@@ -1176,31 +1184,30 @@ void drawBody()
 
 	glTranslatef(0.0f, -0.25f, 0.0f);
 	glScalef(0.75f, 1.5f, 1.25f);
-
 	glBegin(GL_QUADS);
 		// draw front face
-		glNormal3d(1, 0, 0);
+		glNormal3d(0, 0, -1);
 		glVertex3f(-1.0, -1.0, 1.0);
 		glVertex3f( 1.0, -1.0, 1.0);
 		glVertex3f( 1.0,  1.0, 0.75);
 		glVertex3f(-1.0,  1.0, 0.75);
 
 		// draw back face
-		glNormal3d(-1, 0, 0);
+		glNormal3d(0, 0, 1);
 		glVertex3f( 1.0, -1.0, -1.5);
 		glVertex3f(-1.0, -1.0, -1.5);
 		glVertex3f(-1.0,  1.0, -0.75);
 		glVertex3f( 1.0,  1.0, -0.75);
 
 		// draw left face
-		glNormal3d(0, 0, 1);
+		glNormal3d(1, 0, 0);
 		glVertex3f(-1.0, -1.0, -1.5);
 		glVertex3f(-1.0, -1.0,  1.0);
 		glVertex3f(-1.0,  1.0,  0.75);
 		glVertex3f(-1.0,  1.0, -0.75);
 
 		// draw right face
-		glNormal3d(0, 0, -1);
+		glNormal3d(-1, 0, 0);
 		glVertex3f( 1.0, -1.0,  1.0);
 		glVertex3f( 1.0, -1.0, -1.5);
 		glVertex3f( 1.0,  1.0, -0.75);
@@ -1363,28 +1370,28 @@ void drawRightFoot() {
 void drawElbow() {
 	glBegin(GL_QUADS);
 		// draw front face
-		glNormal3d(1, 0, 0);
+		glNormal3d(0, 0, -1);
 		glVertex3f(-1.0, -0.25, 0.5);
 		glVertex3f( 1.0, -0.25, 0.5);
 		glVertex3f( 1.0,  0.75, 0.75);
 		glVertex3f(-1.0,  0.75, 0.75);
 
 		// draw back face
-		glNormal3d(-1, 0, 0);
+		glNormal3d(0, 0, 1);
 		glVertex3f( 1.0, -0.25, -0.5);
 		glVertex3f(-1.0, -0.25, -0.5);
 		glVertex3f(-1.0,  0.75, -0.75);
 		glVertex3f( 1.0,  0.75, -0.75);
 
 		// draw left face
-		glNormal3d(0, 0, 1);
+		glNormal3d(1, 0, 0);
 		glVertex3f(-1.0, -0.25, -0.5);
 		glVertex3f(-1.0, -0.25,  0.5);
 		glVertex3f(-1.0,  0.75,  0.75);
 		glVertex3f(-1.0,  0.75, -0.75);
 
 		// draw right face
-		glNormal3d(0, 0, -1);
+		glNormal3d(-1, 0, 0);
 		glVertex3f( 1.0, -0.25,  0.5);
 		glVertex3f( 1.0, -0.25, -0.5);
 		glVertex3f( 1.0,  0.75, -0.75);
@@ -1409,28 +1416,28 @@ void drawElbow() {
 void drawShoulder() {	
 	glBegin(GL_QUADS);
 		// draw front face
-		glNormal3d(1, 0, 0);
+		glNormal3d(0, 0, -1);
 		glVertex3f(-1.0, -1.0, 0.75);
 		glVertex3f( 1.0, -1.0, 0.75);
 		glVertex3f( 1.0,  1.0, 1.0);
 		glVertex3f(-1.0,  1.0, 1.0);
 
 		// draw back face
-		glNormal3d(-1, 0, 0);
+		glNormal3d(0, 0, 1);
 		glVertex3f( 1.0, -1.0, -0.75);
 		glVertex3f(-1.0, -1.0, -0.75);
 		glVertex3f(-1.0,  1.0, -1.0);
 		glVertex3f( 1.0,  1.0, -1.0);
 
 		// draw left face
-		glNormal3d(0, 0, 1);
+		glNormal3d(1, 0, 0);
 		glVertex3f(-1.0, -1.0, -0.75);
 		glVertex3f(-1.0, -1.0,  0.75);
 		glVertex3f(-1.0,  1.0,  1.0);
 		glVertex3f(-1.0,  1.0, -1.0);
 
 		// draw right face
-		glNormal3d(0, 0, -1);
+		glNormal3d(-1, 0, 0);
 		glVertex3f( 1.0, -1.0,  0.75);
 		glVertex3f( 1.0, -1.0, -0.75);
 		glVertex3f( 1.0,  1.0, -1.0);
@@ -1455,35 +1462,35 @@ void drawShoulder() {
 void drawBeak()
 {
 	glPushMatrix();
-
+	
 	glTranslatef(0.0f, 0.0f, -2.0f);
 	glScalef(0.5f, 0.1f, 0.75f);
 
 	// Draw top beak
 	glBegin(GL_QUADS);
 		// draw front face
-		glNormal3d(1, 0, 0);
+		glNormal3d(0, 0, -1);
 		glVertex3f(-1.0, -1.0, 1.0);
 		glVertex3f( 1.0, -1.0, 1.0);
 		glVertex3f( 1.0,  1.0, 1.0);
 		glVertex3f(-1.0,  1.0, 1.0);
 
 		// draw back face
-		glNormal3d(-1, 0, 0);
+		glNormal3d(0, 0, 1);
 		glVertex3f( 1.0, -1.0, -1.0);
 		glVertex3f(-1.0, -1.0, -1.0);
 		glVertex3f(-1.0,  1.0, -1.0);
 		glVertex3f( 1.0,  1.0, -1.0);
 
 		// draw left face
-		glNormal3d(0, 0, 1);
+		glNormal3d(1, 0, 0);
 		glVertex3f(-1.0, -1.0, -1.0);
 		glVertex3f(-1.0, -1.0,  1.0);
 		glVertex3f(-1.0,  1.0,  1.0);
 		glVertex3f(-1.0,  1.0, -1.0);
 
 		// draw right face
-		glNormal3d(0, 0, -1);
+		glNormal3d(-1, 0, 0);
 		glVertex3f( 1.0, -1.0,  1.0);
 		glVertex3f( 1.0, -1.0, -1.0);
 		glVertex3f( 1.0,  1.0, -1.0);
@@ -1510,28 +1517,28 @@ void drawBeak()
 
 	glBegin(GL_QUADS);
 		// draw front face
-		glNormal3d(1, 0, 0);
+		glNormal3d(0, 0, -1);
 		glVertex3f(-1.0, -1.0, 1.0);
 		glVertex3f( 1.0, -1.0, 1.0);
 		glVertex3f( 1.0,  1.0, 1.0);
 		glVertex3f(-1.0,  1.0, 1.0);
 
 		// draw back face
-		glNormal3d(-1, 0, 0);
+		glNormal3d(0, 0, 1);
 		glVertex3f( 1.0, -1.0, -1.0);
 		glVertex3f(-1.0, -1.0, -1.0);
 		glVertex3f(-1.0,  1.0, -1.0);
 		glVertex3f( 1.0,  1.0, -1.0);
 
 		// draw left face
-		glNormal3d(0, 0, 1);
+		glNormal3d(1, 0, 0);
 		glVertex3f(-1.0, -1.0, -1.0);
 		glVertex3f(-1.0, -1.0,  1.0);
 		glVertex3f(-1.0,  1.0,  1.0);
 		glVertex3f(-1.0,  1.0, -1.0);
 
 		// draw right face
-		glNormal3d(0, 0, -1);
+		glNormal3d(-1, 0, 0);
 		glVertex3f( 1.0, -1.0,  1.0);
 		glVertex3f( 1.0, -1.0, -1.0);
 		glVertex3f( 1.0,  1.0, -1.0);
