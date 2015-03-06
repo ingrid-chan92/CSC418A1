@@ -919,14 +919,18 @@ void display(void)
 	//   rendered.
     ///////////////////////////////////////////////////////////
 
-	// Ambient/Diff/Spec Lighting and Material
-	GLfloat specularLight[] = {1.0, 1.0, 1.0};
-	GLfloat ambientLight[] = {0.0, 0.0, 0.0};
-	GLfloat diffuseLight[] = {1.0, 1.0, 1.0};
+	// Ambient/Diff/Spec Lighting and Material	
+	GLfloat ambientLight[] = {0.6f, 0.6f, 0.6f, 1.0f};
+	GLfloat diffuseLight[] = {0.6f, 0.6f, 0.6f, 1.0f};
+	GLfloat specularLight[] = {1.0, 1.0, 1.0};	
 
-	GLfloat amb[] = {0.25f, 0.25f, 0.25f, 1.0f};
-	GLfloat diff[] = {0.4f, 0.4f, 0.4f, 1.0f};
-	GLfloat spec[] = {0.774597f, 0.774597f, 0.774597f, 1.0f};
+	GLfloat metalAmbient[] = {0.25f, 0.25f, 0.25f, 1.0f};
+	GLfloat metalDiffuse[] = {0.25f, 0.25f, 0.25f, 1.0f};
+	GLfloat metalSpecular[] = {0.8f, 0.8f, 0.8f, 1.0f};
+
+	GLfloat matteAmbient[] = {0.75f, 0.75f, 0.75f, 1.0f};
+	GLfloat matteDiffuse[] = {0.75f, 0.75f, 0.75f, 1.0f};
+	GLfloat matteSpecular[] = {0.25f, 0.25f, 0.25f, 1.0f};
 
 	// Enable Material
 	glEnable(GL_COLOR_MATERIAL);
@@ -944,6 +948,11 @@ void display(void)
 				20 * sin ( joint_ui_data->getDOF(Keyframe::LIGHT_ANGLE) * 3.14159265 / 180.0 ), 
 				0, 0.0};
 	glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
+
+	// Set light parameters
+	glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);	
 
 	// determine render style and set glPolygonMode appropriately
 	switch (renderStyle) {
@@ -975,25 +984,31 @@ void display(void)
 			break;
 
 		case METALLIC:
-			glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
-			glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);
-			glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
-
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			glDisable(GL_COLOR_MATERIAL);
 
 			// Set metallic colour
-			glMaterialfv(GL_FRONT, GL_AMBIENT, amb);			
-			glMaterialfv(GL_FRONT, GL_DIFFUSE, diff);			
-			glMaterialfv(GL_FRONT, GL_SPECULAR, spec);
-			glMaterialf(GL_FRONT, GL_SHININESS, 0.6 * 128.0);
+			glMaterialfv(GL_FRONT, GL_AMBIENT, metalAmbient);			
+			glMaterialfv(GL_FRONT, GL_DIFFUSE, metalDiffuse);			
+			glMaterialfv(GL_FRONT, GL_SPECULAR, metalSpecular);
+			glMaterialf(GL_FRONT, GL_SHININESS, 0.8 * 128.0);
+
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 			renderImage();
 
 			break;
 			
 		case MATTE:
+			glDisable(GL_COLOR_MATERIAL);
+
+			// Set matte colour
+			glMaterialfv(GL_FRONT, GL_AMBIENT, matteAmbient);			
+			glMaterialfv(GL_FRONT, GL_DIFFUSE, matteDiffuse);			
+			glMaterialfv(GL_FRONT, GL_SPECULAR, matteSpecular);
+			glMaterialf(GL_FRONT, GL_SHININESS, 0.2 * 128.0);
+
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-			glColor3f( 1.0f, 1.0f, 1.0f );
 			renderImage();
+
 			break;
 
 	}

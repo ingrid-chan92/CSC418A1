@@ -41,13 +41,13 @@ _X_   (10 points) Part 2a     3D penguin design
                   
 _X_   (10 points) Part 2b     Basic polygon rendering
 
-___   ( 5 points) Part 2c     Rendering metallic and matte penguin
+_X_   ( 5 points) Part 2c     Rendering metallic and matte penguin
 
 _X_   (10 points) Part 2d     Light source control
                   
 _X_   ( 5 points) Part 2e     Keyframe functionality & supplied keyframe file
 
-___   ( 5 points) Part 2f     Catmull-Rom interpolation functionality
+_X_   ( 5 points) Part 2f     Catmull-Rom interpolation functionality
 
 _X_   ( 5 points) Part 2g     Written report
 

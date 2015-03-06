@@ -9,10 +9,11 @@ Basic polgygon rendering is handled in display() using a switch statement to cho
 
 
 Part 2c     Rendering metallic and matte penguin
--
+Metallic and Matte options have been added to the Render Control menu. Metallic is essentially high Specular and low Diffuse/Ambient. Matte is a low Specular and a high Diffuse/Ambient. Both types of shading use the exact same light defined prior to the switch statement in the display() function.
+
 
 Part 2d     Light source control
-A light has been added in the X-Y plane, rotating in a circle with radius 20. This light can be moved in a circle using the "Light Angle" setting found in the "Render Control" menu. This light is drawn in display() prior to the penguin being rendered. 
+A light has been added in the X-Y plane, rotating in a circle with radius 20 with a distance of "infinity". This light can be moved in a circle using the "Light Angle" setting found in the "Render Control" menu. This light is drawn in display() prior to the penguin being rendered. 
 
 NOTE: The light is pointing in from the "Left" of the screen, hence why the Penguin is dark when it is as (0, 0, 0) rotation.
 
@@ -20,9 +21,9 @@ NOTE: The light is pointing in from the "Left" of the screen, hence why the Peng
 Part 2e     Keyframe functionality & supplied keyframe file
 Main modifications can be found in updateKeyframeButton(). At this function, keyframeID, Time, and DOFs of the current frame are recorded into keyframes[keyframeID]. When updating old frames, no change will be made to maxValidKeyframe. Only when a new frame is added will maxValidKeyframe be updated. When no frames have been set and "Save Keyframes to File" is pressed, the keyframes.txt saved will contain a "-1" and nothing else.
 
-IMPORTANT: The Keyframe sample file has been labelled "SampleKeyframes.txt". The other Keyframes.txt is the version included with the assignment tar.gz
+IMPORTANT: The Keyframe sample file has been labelled "SampleKeyframes.txt". The other Keyframes.txt SHOULD be identical but may not be.
 
 
 Part 2f     Catmull-Rom interpolation functionality
--
+(Was not entirely sure what needed to be done here) The keyframing works as it is described in the assignment. No changes made to the Catmull-Rom code.
 
