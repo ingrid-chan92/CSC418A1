@@ -879,27 +879,29 @@ void display(void)
 	// Get the time for the current animation step, if necessary
 	if( animate_mode )
 	{
-		float curTime = animationTimer->elapsed();
-		if( curTime >= keyframes[maxValidKeyframe].getTime() )
-		{
-			// Restart the animation
-			animationTimer->reset();
-			curTime = animationTimer->elapsed();
+		if (maxValidKeyframe >= 0) {
+			float curTime = animationTimer->elapsed();
+			if( curTime >= keyframes[maxValidKeyframe].getTime() )
+			{
+				// Restart the animation
+				animationTimer->reset();
+				curTime = animationTimer->elapsed();
+			}
+
+			///////////////////////////////////////////////////////////
+			// README:
+			//   This statement loads the interpolated joint DOF vector
+			//   into the global 'joint_ui_data' variable. Use the
+			//   'joint_ui_data' variable below in your model code to
+			//   drive the model for animation.
+			///////////////////////////////////////////////////////////
+			// Get the interpolated joint DOFs
+			joint_ui_data->setDOFVector( getInterpolatedJointDOFS(curTime) );
+
+			// Update user interface
+			joint_ui_data->setTime(curTime);
+			glui_keyframe->sync_live();
 		}
-
-		///////////////////////////////////////////////////////////
-		// README:
-		//   This statement loads the interpolated joint DOF vector
-		//   into the global 'joint_ui_data' variable. Use the
-		//   'joint_ui_data' variable below in your model code to
-		//   drive the model for animation.
-		///////////////////////////////////////////////////////////
-		// Get the interpolated joint DOFs
-		joint_ui_data->setDOFVector( getInterpolatedJointDOFS(curTime) );
-
-		// Update user interface
-		joint_ui_data->setTime(curTime);
-		glui_keyframe->sync_live();
 	}
 
 
