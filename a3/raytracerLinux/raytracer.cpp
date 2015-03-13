@@ -254,10 +254,13 @@ void Raytracer::render( int width, int height, Point3D eye, Vector3D view,
 
 			// TODO: Convert ray to world space and call 
 			// shadeRay(ray) to generate pixel colour. 	
+			// DO RAYCASTING + ANTI ALIASING HERE
+			// From the eye -> Cast ray to imagePlane point -> keep going forward
 			
 			Ray3D ray;
 
 			Colour col = shadeRay(ray); 
+			// Ray has been set. Call the light source
 
 			_rbuffer[i*width+j] = int(col[0]*255);
 			_gbuffer[i*width+j] = int(col[1]*255);
