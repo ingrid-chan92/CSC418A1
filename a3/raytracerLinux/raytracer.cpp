@@ -258,6 +258,8 @@ void Raytracer::render( int width, int height, Point3D eye, Vector3D view,
 			// From the eye -> Cast ray to imagePlane point -> keep going forward
 			
 			Ray3D ray;
+			ray.origin = viewToWorld * origin; // Or use eye instead of the transformed origin?
+			ray.dir = (viewToWorld * imagePlane) - ray.origin;
 
 			Colour col = shadeRay(ray); 
 			// Ray has been set. Call the light source
