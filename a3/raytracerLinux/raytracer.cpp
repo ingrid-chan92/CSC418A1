@@ -231,12 +231,35 @@ Colour Raytracer::shadeRay( Ray3D& ray ) {
 	return col; 
 }	
 
+void Raytracer::set_colour( int width, int height, int col_off, int row_off, int i,
+			int j, int factor, Matrix4x4 viewToWorld, int num_rays ) {
+	// Sets up ray origin and direction in view space, 
+	// image plane is at z = -1.
+	Point3D origin(0, 0, 0);
+	Point3D imagePlane;
+	imagePlane[0] = (-double(width)/2 + col_off + j)/factor;
+	imagePlane[1] = (-double(height)/2 + row_off + i)/factor;
+	imagePlane[2] = -1;
+
+	// Convert ray to world space and call 
+	Ray3D ray;
+	ray.origin = viewToWorld * origin; //eye
+	ray.dir = (viewToWorld * imagePlane) - ray.origin; // eye;
+	Colour col = shadeRay(ray); 
+	// Ray has been set. Call the light source
+
+	_rbuffer[i*width+j] += int(col[0]*255*(1/float(num_rays)));
+	_gbuffer[i*width+j] += int(col[1]*255*(1/float(num_rays)));
+	_bbuffer[i*width+j] += int(col[2]*255*(1/float(num_rays)));
+}
+
 void Raytracer::render( int width, int height, Point3D eye, Vector3D view, 
 		Vector3D up, double fov, char* fileName ) {
 	Matrix4x4 viewToWorld;
 	_scrWidth = width;
 	_scrHeight = height;
 	double factor = (double(height)/2)/tan(fov*M_PI/360.0);
+	int num_rays = 9;
 
 	initPixelBuffer();
 	viewToWorld = initInvViewMatrix(eye, view, up);
@@ -244,29 +267,46 @@ void Raytracer::render( int width, int height, Point3D eye, Vector3D view,
 	// Construct a ray for each pixel.
 	for (int i = 0; i < _scrHeight; i++) {
 		for (int j = 0; j < _scrWidth; j++) {
-			// Sets up ray origin and direction in view space, 
-			// image plane is at z = -1.
+			int split_pixel = floor(sqrt(num_rays)) + 1;
+			
+			// Subdivide each pixel into squares for anti-aliasing
+			for (int r = 1; r < split_pixel; r++) {
+				float row_off = ((float)rand()/float(RAND_MAX)) * (1/float(split_pixel)) * r;
+				for (int c = 1; c < split_pixel; c++) {
+					float col_off = ((float)rand()/float(RAND_MAX)) * (1/float(split_pixel)) * c;
+					set_colour(width, height, col_off, row_off, i, j, factor, viewToWorld, num_rays);
+				}
+			}
+
+			// Extra rays if num_rays is not a perfect square
+			int extra_rays = num_rays - ((split_pixel - 1)*(split_pixel - 1));
+			for (int x = 0; x < extra_rays; x++) {
+				float pos = ((float)rand()/float(RAND_MAX));
+				set_colour(width, height, pos, pos, i, j, factor, viewToWorld, num_rays);
+			}
+
+			/* // Recreated bug with modification of original code
 			Point3D origin(0, 0, 0);
 			Point3D imagePlane;
 			imagePlane[0] = (-double(width)/2 + 0.5 + j)/factor;
 			imagePlane[1] = (-double(height)/2 + 0.5 + i)/factor;
 			imagePlane[2] = -1;
 
-			// TODO: Convert ray to world space and call 
-			// shadeRay(ray) to generate pixel colour. 	
-			// DO RAYCASTING + ANTI ALIASING HERE
-			// From the eye -> Cast ray to imagePlane point -> keep going forward
-			
+			// Convert ray to world space and call 
 			Ray3D ray;
-			ray.origin = viewToWorld * origin; // Or use eye instead of the transformed origin?
-			ray.dir = (viewToWorld * imagePlane) - ray.origin;
-
+			ray.origin = viewToWorld * origin; //eye
+			ray.dir = (viewToWorld * imagePlane) - ray.origin; // eye;
 			Colour col = shadeRay(ray); 
 			// Ray has been set. Call the light source
 
-			_rbuffer[i*width+j] = int(col[0]*255);
-			_gbuffer[i*width+j] = int(col[1]*255);
-			_bbuffer[i*width+j] = int(col[2]*255);
+			_rbuffer[i*width+j] = col[0]*255*0.25f;
+			_gbuffer[i*width+j] = col[1]*255*0.25f;
+			_bbuffer[i*width+j] = col[2]*255*0.25f;
+
+			_rbuffer[i*width+j] = int(_rbuffer[i*width+j]*4);
+			_gbuffer[i*width+j] = int(_gbuffer[i*width+j]*4);
+			_bbuffer[i*width+j] = int(_bbuffer[i*width+j]*4);*/
+
 		}
 	}
 

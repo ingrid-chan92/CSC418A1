@@ -112,6 +112,10 @@ private:
 	// this function recursively for reflection and refraction.  
 	Colour shadeRay( Ray3D& ray ); 
 
+	// Sets the colour of a single pixel (denoted by i, j) 
+	void set_colour( int width, int height, int col_off, int row_off, int i,
+			int j, int factor, Matrix4x4 viewToWorld, int num_rays );
+
 	// Constructs a view to world transformation matrix based on the
 	// camera parameters.
 	Matrix4x4 initInvViewMatrix( Point3D eye, Vector3D view, Vector3D up );
