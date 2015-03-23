@@ -39,7 +39,7 @@ void PointLight::shade( Ray3D& ray ) {
 
 	// Calculate Diffuse Colour
 	Colour diffuse = fmax(0, normal.dot(pointSourceDir)) * mat->diffuse * _col_diffuse;
-	
+
 	// Calculate Specular Colour
 	float specularHighlight =  pow(fmax(0, mirrorDir.dot(cameraDir)), mat->specular_exp);
 	Colour specular = specularHighlight * mat->specular * _col_specular;

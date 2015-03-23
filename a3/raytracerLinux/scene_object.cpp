@@ -43,12 +43,11 @@ bool UnitSquare::intersect( Ray3D& ray, const Matrix4x4& worldToModel,
 	float intersectX = objRay.origin[0] + (lambda * objRay.dir[0]);
 	float intersectY = objRay.origin[1] + (lambda * objRay.dir[1]);
 
-	bool isXIntersecting = -0.5 >= intersectX && intersectX <= 0.5;
-	bool isYIntersecting = -0.5 >= intersectY && intersectY <= 0.5;
+	bool isXIntersecting = intersectX >= -0.5 && intersectX <= 0.5;
+	bool isYIntersecting = intersectY >= -0.5 && intersectY <= 0.5;
 
 	// Does ray intersect with unit square and is closer than the existing intersection?
-	if (isXIntersecting && isYIntersecting && (ray.intersection.none || ray.intersection.t_value > lambda)) {		
-
+	if (isXIntersecting && isYIntersecting && (ray.intersection.none || ray.intersection.t_value > lambda)) {	
 		ray.intersection.point = modelToWorld * Point3D(intersectX, intersectY, 0);
 		ray.intersection.normal = worldToModel.transpose() * Vector3D(0.0, 0.0, 1.0);
 		ray.intersection.normal.normalize();
@@ -59,7 +58,7 @@ bool UnitSquare::intersect( Ray3D& ray, const Matrix4x4& worldToModel,
 	} else {
 		// Intersecting point does not go through unit square/exists a closer point
 		return false;
-	}	
+	}
 }
 
 bool UnitSphere::intersect( Ray3D& ray, const Matrix4x4& worldToModel,
