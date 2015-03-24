@@ -114,7 +114,7 @@ private:
 
 	// Sets the colour of a single pixel (denoted by i, j) 
 	void set_colour( int width, int height, float col_off, float row_off, int i,
-			int j, float factor, Matrix4x4 viewToWorld, float num_rays );
+			int j, double factor, Matrix4x4 viewToWorld, float num_rays );
 
 	// Constructs a view to world transformation matrix based on the
 	// camera parameters.

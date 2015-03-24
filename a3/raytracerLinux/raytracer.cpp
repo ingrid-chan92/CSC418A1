@@ -232,7 +232,7 @@ Colour Raytracer::shadeRay( Ray3D& ray ) {
 }	
 
 void Raytracer::set_colour( int width, int height, float col_off, float row_off, int i,
-			int j, float factor, Matrix4x4 viewToWorld, float num_rays ) {
+			int j, double factor, Matrix4x4 viewToWorld, float num_rays ) {
 
 	// Sets up ray origin and direction in view space, 
 	// image plane is at z = -1.

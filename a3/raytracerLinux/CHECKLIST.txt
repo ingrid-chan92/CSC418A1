@@ -42,15 +42,15 @@ B. PLACE AN (X) IN FRONT OF PORTIONS OF THE ASSIGNMENT THAT YOU COMPLETED IN FUL
    WE WILL BE ABLE TO MAKE AN ACCURATE ASSESSMENT
 
    
-___   (10 points) Part 1a     Ray casting
+_X_   (10 points) Part 1a     Ray casting
                   
-___   (20 points) Part 1b     Ray-sphere intersection
+_X_   (20 points) Part 1b     Ray-sphere intersection
 
-___   (15 points) Part 1c     Ray-square intersection
+_X_   (15 points) Part 1c     Ray-square intersection
 
-___   (15 points) Part 1d     Phong shading (ambient, diffuse, and specular components)
+_X_   (15 points) Part 1d     Phong shading (ambient, diffuse, and specular components)
                   
-___   ( 5 points) Part 1e     Coding style
+_X_   ( 5 points) Part 1e     Anti-aliasing
 
 ___   (10 points) Part 1f     Written report
 
