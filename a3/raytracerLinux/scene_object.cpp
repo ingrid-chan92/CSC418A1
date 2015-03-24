@@ -49,7 +49,7 @@ bool UnitSquare::intersect( Ray3D& ray, const Matrix4x4& worldToModel,
 	// Does ray intersect with unit square and is closer than the existing intersection?
 	if (isXIntersecting && isYIntersecting && (ray.intersection.none || ray.intersection.t_value > lambda)) {	
 		ray.intersection.point = modelToWorld * Point3D(intersectX, intersectY, 0);
-		ray.intersection.normal = worldToModel.transpose() * Vector3D(0.0, 0.0, 1.0);
+		ray.intersection.normal = modelToWorld * Vector3D(0.0, 0.0, 1.0);
 		ray.intersection.normal.normalize();
 		ray.intersection.none = false;
 		ray.intersection.t_value = lambda;

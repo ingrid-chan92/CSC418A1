@@ -113,8 +113,8 @@ private:
 	Colour shadeRay( Ray3D& ray ); 
 
 	// Sets the colour of a single pixel (denoted by i, j) 
-	void set_colour( int width, int height, int col_off, int row_off, int i,
-			int j, int factor, Matrix4x4 viewToWorld, int num_rays );
+	void set_colour( int width, int height, float col_off, float row_off, int i,
+			int j, float factor, Matrix4x4 viewToWorld, float num_rays );
 
 	// Constructs a view to world transformation matrix based on the
 	// camera parameters.
