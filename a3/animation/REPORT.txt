@@ -1,0 +1,26 @@
+--- CREATING THE PARTS ---
+Creating and placing the parts was much like Assignment 1, but with the added complexity of dealing with the "z" value. As I began working on defining the parts, I would do some translation in the definition of the part (especially for the "z" value. It soon became obvious that it was much simpler to simply design the part to be left at the origin before translating the part as needed.
+
+I designed each part in their own function, and called each part while adding the necessary translation/rotations in a overall function (drawPenguin). Finally, this function was called within the display function.
+
+
+--- RENDERING MODES ---
+The rendering of the wireframe, solid, and solid with outline was initially done with a simple call using "glPolygonMode". However, once the lighting was added (in a later section), the wireframe often blended into the filled polygons. To overcome this issue, I changed the material of the wireframe, after having displayed the filled polygons.
+
+
+--- MATERIAL PROPERTIES ---
+This section required much trial and error to find the right textures. Much of the time spent on this section was fiddling with the values (of the overall lighting setup, as well as the the values for the materials).
+
+In the end, I found "Metallic" objects required high specular values and low diffuse values, while "Matte" objects required low specular values and high diffuse values. I set the ambient light to be "0.3" as to make unlit areas more visible but not over-lit.
+
+Finally, I added the ability to control the object material in the rendering style glui (by adding radio buttons for the different options).
+
+
+--- LIGHT SOURCE CONTROL ---
+For the light source control, I added an extra glui panel, allowing the user to move the light along the "z" axis, and in a circular fashion around the "z" axis (parallel to the xy-plane). I chose the value of "8" to be the radius and translation min/max due to the animation maximums being 5. This allowed for a sufficient breadth as to not interfere with the animations, while still having an effect on the penguin.  
+
+I found the light had to be placed in certain positions to notice the metallic sheen of the material.
+
+
+--- ANIMATION ---
+The spinners were, as with the first section, very similar to the first assignment. Furthermore, the updateKeyframeButton function was similar to the loadKeyframeButton function, allowing for a simple completion of the code. 
