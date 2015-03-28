@@ -25,11 +25,6 @@ bool ParticleEffect::loadBitmapTexture(char* filename)
 	if (txParticle == 0)
 		return false;
 
-	// Bind the texture and set it up
-	glBindTexture(GL_TEXTURE_2D, txParticle);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
 	return true;
 }
 
@@ -154,6 +149,8 @@ void ParticleEffect::renderParticles()
 
 	// Renable depth testing for the rest of the scene
 	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_BLEND);
 }
 
 // Re-initialize the particles (clear them from the screen)

@@ -1,9 +1,11 @@
 SNOW
 - Most of the code for the snow is implemented in particle.h and particle.cpp
 - Calls to make the snow work in "main.cpp" can be found by finding on "snow"
-	- Initializing/Clearing of the snow called in "animateButton"
+	- Snow is set in "initDS" 
+	- Initializing of the snow called in "main"
+	- Clearing of the snow called in "animateButton"
 	- Reviving/Updating/Rendering snow called in "display"
-	- snow is set in "initDS"
+	
 - Used the SOIL library to read the texture... I stole the src files only to reduce space
 
 - Got a lot of help from (to declare in the Checklist?):

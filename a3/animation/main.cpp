@@ -50,6 +50,9 @@
 #include "vector.h"
 #include "particle.h"
 
+#define X .525731112119133606 
+#define Z .850650808352039932
+
 
 // *************** GLOBAL VARIABLES *************************
 
@@ -208,6 +211,11 @@ void motion(int x, int y);
 // Functions to help draw the object
 Vector getInterpolatedJointDOFS(float time);
 void drawCube();
+void normalize(GLfloat *a);
+void drawtri(GLfloat *a, GLfloat *b, GLfloat *c, int div, float r);
+void drawsphere(int ndiv, float radius);
+
+
 void drawBody();
 void drawHead();
 void drawEye(float k, float r, float h);
@@ -219,7 +227,7 @@ void drawFoot();
 
 // Helper functions for display
 void lighting();
-void drawPenguin();
+void drawBlob();
 
 
 // Image functions
@@ -254,6 +262,9 @@ int main(int argc, char** argv)
     initGlut(argc, argv);
     initGlui();
     initGl();
+
+	// Initialize the snow
+    snow->initParticles();
 
     // Invoke the standard GLUT main event loop
     glutMainLoop();
@@ -433,9 +444,6 @@ void animateButton(int)
 
 	animate_mode = 1;
 	GLUI_Master.set_glutIdleFunc(animate);
-
-	// Initialize the snow
-    snow->initParticles();
 
 	// Let the user know the animation is running
 	sprintf(msg, "Status: Animating...");
@@ -888,10 +896,20 @@ void setWireframeMat()
 
 
 // Draw the penguin
-void drawPenguin()
+void drawBlob()
 {
 	// Draw the body
-	glutSolidSphere(0.5, 20, 20);//drawCube();
+	glPushMatrix();
+		glTranslatef(joint_ui_data->getDOF(Keyframe::ROOT_TRANSLATE_X),
+					 joint_ui_data->getDOF(Keyframe::ROOT_TRANSLATE_Y),
+					 joint_ui_data->getDOF(Keyframe::ROOT_TRANSLATE_Z));
+		glRotatef(joint_ui_data->getDOF(Keyframe::ROOT_ROTATE_X), 1.0, 0.0, 0.0);
+		glRotatef(joint_ui_data->getDOF(Keyframe::ROOT_ROTATE_Y), 0.0, 1.0, 0.0);
+		glRotatef(joint_ui_data->getDOF(Keyframe::ROOT_ROTATE_Z), 0.0, 0.0, 1.0);
+		glColor3f(0.0f, 0.2f, 0.4f);
+		//drawCube();
+		glutSolidSphere(0.5f, 20, 20);
+	glPopMatrix();
 }
 
 
@@ -942,12 +960,15 @@ void display(void)
 		snow->updateParticles();
 	}
 
-		// Enable textures and bind our particle
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, snow->txParticle);
 
-	// Render the snow
-	snow->renderParticles();
+	// Enable textures and bind our particle
+	glPushMatrix();
+		drawBlob();
+
+		// Render the snow
+		snow->renderParticles();
+	glPopMatrix();
+
 
     // Execute any GL functions that are in the queue just to be safe
     glFlush();
