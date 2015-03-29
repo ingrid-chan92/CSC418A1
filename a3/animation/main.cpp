@@ -150,45 +150,48 @@ Keyframe* joint_ui_data;
 
 // README: To change the range of a particular DOF,
 // simply change the appropriate min/max values below
-const float ROOT_TRANSLATE_X_MIN = -5.0;
-const float ROOT_TRANSLATE_X_MAX =  5.0;
-const float ROOT_TRANSLATE_Y_MIN = -5.0;
-const float ROOT_TRANSLATE_Y_MAX =  5.0;
-const float ROOT_TRANSLATE_Z_MIN = -5.0;
-const float ROOT_TRANSLATE_Z_MAX =  5.0;
-const float ROOT_ROTATE_X_MIN    = -180.0;
-const float ROOT_ROTATE_X_MAX    =  180.0;
-const float ROOT_ROTATE_Y_MIN    = -180.0;
-const float ROOT_ROTATE_Y_MAX    =  180.0;
-const float ROOT_ROTATE_Z_MIN    = -180.0;
-const float ROOT_ROTATE_Z_MAX    =  180.0;
-const float HEAD_MIN             = -180.0;
-const float HEAD_MAX             =  180.0;
-const float SHOULDER_PITCH_MIN   = -45.0;
-const float SHOULDER_PITCH_MAX   =  45.0;
-const float SHOULDER_YAW_MIN     = -45.0;
-const float SHOULDER_YAW_MAX     =  45.0;
-const float SHOULDER_ROLL_MIN    = -45.0;
-const float SHOULDER_ROLL_MAX    =  45.0;
-const float HIP_PITCH_MIN        = -45.0;
-const float HIP_PITCH_MAX        =  45.0;
-const float HIP_YAW_MIN          = -45.0;
-const float HIP_YAW_MAX          =  45.0;
-const float HIP_ROLL_MIN         = -45.0;
-const float HIP_ROLL_MAX         =  45.0;
-const float BEAK_MIN             =  0.0;
-const float BEAK_MAX             =  0.35;
-const float ELBOW_MIN            =  0.0;
-const float ELBOW_MAX            =  75.0;
-const float KNEE_MIN             = -45.0;
-const float KNEE_MAX             =  45.0;
-const float LIGHT_TRANS_Z_MIN	 = -8.0;
-const float LIGHT_TRANS_Z_MAX	 =  8.0;
+const float FULL_TRANSLATE_X_MIN = -5.0;
+const float FULL_TRANSLATE_X_MAX =  5.0;
+const float FULL_TRANSLATE_Y_MIN = -5.0;
+const float FULL_TRANSLATE_Y_MAX =  5.0;
+const float FULL_TRANSLATE_Z_MIN = -5.0;
+const float FULL_TRANSLATE_Z_MAX =  5.0;
+const float FULL_ROTATE_X_MIN    = -180.0;
+const float FULL_ROTATE_X_MAX    =  180.0;
+const float FULL_ROTATE_Y_MIN    = -180.0;
+const float FULL_ROTATE_Y_MAX    =  180.0;
+const float FULL_ROTATE_Z_MIN    = -180.0;
+const float FULL_ROTATE_Z_MAX    =  180.0;
+const float CHAR_SCALE_X_MIN     =  0.0;
+const float CHAR_SCALE_X_MAX     =  1.5;
+const float CHAR_SCALE_Y_MIN     =  0.0;
+const float CHAR_SCALE_Y_MAX     =  1.5;
+const float CHAR_SCALE_Z_MIN     =  0.0;
+const float CHAR_SCALE_Z_MAX     =  1.5;
+const float ROOT_SCALE_X_MIN     =  0.0;
+const float ROOT_SCALE_X_MAX     =  1.5;
+const float ROOT_SCALE_Y_MIN     =  0.0;
+const float ROOT_SCALE_Y_MAX     =  1.5;
+const float ROOT_SCALE_Z_MIN     =  0.0;
+const float ROOT_SCALE_Z_MAX     =  1.5;
+const float EYE_BLINK_MIN        =  0.1;
+const float EYE_BLINK_MAX        =  1.0;
+const float EYE_SIZE_MIN         =  0.8;
+const float EYE_SIZE_MAX         =  1.2;  
+const float FOOT_PITCH_MIN       = -45.0;
+const float FOOT_PITCH_MAX       =  45.0;
+const float FOOT_YAW_MIN         = -180.0;
+const float FOOT_YAW_MAX         =  180.0;
+const float LIGHT_TRANS_Z_MIN	 =   0.0;
+const float LIGHT_TRANS_Z_MAX	 =  40.0;
 const float LIGHT_ROTATE_Z_MIN	 = -180.0;
 const float LIGHT_ROTATE_Z_MAX 	 =  180.0; 
 
 // Particle initialization
 ParticleEffect* snow;
+
+// Stores quadratic objects
+GLUquadricObj *qobj; 
 
 // ***********  FUNCTION HEADER DECLARATIONS ****************
 
@@ -284,6 +287,7 @@ void initDS()
 	frameRateTimer = new Timer();
 	joint_ui_data  = new Keyframe();
 	snow = new ParticleEffect();
+	qobj = gluNewQuadric();
 }
 
 
@@ -494,6 +498,7 @@ void renderFramesToFileButton(int)
 // Quit button handler.  Called when the "quit" button is pressed.
 void quitButton(int)
 {
+  gluDeleteQuadric(qobj);
   exit(0);
 }
 
@@ -511,148 +516,171 @@ void initGlui()
 	//
 	glui_joints = GLUI_Master.create_glui("Joint Control", 0, Win[0]+12, 0);
 
-    // Create controls to specify root position and orientation
+	// Create controls to specify root position and orientation
 	glui_panel = glui_joints->add_panel("Root");
 
+	// Intialize scaling
+	joint_ui_data->setDOF(Keyframe::ROOT_SCALE_X, 1.0);
+	joint_ui_data->setDOF(Keyframe::ROOT_SCALE_Y, 1.0);
+	joint_ui_data->setDOF(Keyframe::ROOT_SCALE_Z, 1.0);
+
 	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "translate x:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::ROOT_TRANSLATE_X));
-	glui_spinner->set_float_limits(ROOT_TRANSLATE_X_MIN, ROOT_TRANSLATE_X_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner->set_float_limits(FULL_TRANSLATE_X_MIN, FULL_TRANSLATE_X_MAX, GLUI_LIMIT_CLAMP);
 	glui_spinner->set_speed(SPINNER_SPEED);
 
 	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "translate y:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::ROOT_TRANSLATE_Y));
-	glui_spinner->set_float_limits(ROOT_TRANSLATE_Y_MIN, ROOT_TRANSLATE_Y_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner->set_float_limits(FULL_TRANSLATE_Y_MIN, FULL_TRANSLATE_Y_MAX, GLUI_LIMIT_CLAMP);
 	glui_spinner->set_speed(SPINNER_SPEED);
 
 	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "translate z:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::ROOT_TRANSLATE_Z));
-	glui_spinner->set_float_limits(ROOT_TRANSLATE_Z_MIN, ROOT_TRANSLATE_Z_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner->set_float_limits(FULL_TRANSLATE_Z_MIN, FULL_TRANSLATE_Z_MAX, GLUI_LIMIT_CLAMP);
 	glui_spinner->set_speed(SPINNER_SPEED);
 
 	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "rotate x:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::ROOT_ROTATE_X));
-	glui_spinner->set_float_limits(ROOT_ROTATE_X_MIN, ROOT_ROTATE_X_MAX, GLUI_LIMIT_WRAP);
+	glui_spinner->set_float_limits(FULL_ROTATE_X_MIN, FULL_ROTATE_X_MAX, GLUI_LIMIT_WRAP);
 	glui_spinner->set_speed(SPINNER_SPEED);
 
 	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "rotate y:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::ROOT_ROTATE_Y));
-	glui_spinner->set_float_limits(ROOT_ROTATE_Y_MIN, ROOT_ROTATE_Y_MAX, GLUI_LIMIT_WRAP);
+	glui_spinner->set_float_limits(FULL_ROTATE_Y_MIN, FULL_ROTATE_Y_MAX, GLUI_LIMIT_WRAP);
 	glui_spinner->set_speed(SPINNER_SPEED);
 
 	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "rotate z:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::ROOT_ROTATE_Z));
-	glui_spinner->set_float_limits(ROOT_ROTATE_Z_MIN, ROOT_ROTATE_Z_MAX, GLUI_LIMIT_WRAP);
+	glui_spinner->set_float_limits(FULL_ROTATE_Z_MIN, FULL_ROTATE_Z_MAX, GLUI_LIMIT_WRAP);
 	glui_spinner->set_speed(SPINNER_SPEED);
 
-	// Create controls to specify head rotation
-	glui_panel = glui_joints->add_panel("Head");
-
-	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "head:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::HEAD));
-	glui_spinner->set_float_limits(HEAD_MIN, HEAD_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "scale x:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::ROOT_SCALE_X));
+	glui_spinner->set_float_limits(ROOT_SCALE_X_MIN, ROOT_SCALE_X_MAX, GLUI_LIMIT_WRAP);
 	glui_spinner->set_speed(SPINNER_SPEED);
 
-	// Create controls to specify beak
-	glui_panel = glui_joints->add_panel("Beak");
-
-	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "beak:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::BEAK));
-	glui_spinner->set_float_limits(BEAK_MIN, BEAK_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "scale y:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::ROOT_SCALE_Y));
+	glui_spinner->set_float_limits(ROOT_SCALE_Y_MIN, ROOT_SCALE_Y_MAX, GLUI_LIMIT_WRAP);
 	glui_spinner->set_speed(SPINNER_SPEED);
 
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "scale z:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::ROOT_SCALE_Z));
+	glui_spinner->set_float_limits(ROOT_SCALE_Z_MIN, ROOT_SCALE_Z_MAX, GLUI_LIMIT_WRAP);
+	glui_spinner->set_speed(SPINNER_SPEED);
 
 	glui_joints->add_column(false);
 
+    // Create controls to specify char position and orientation
+	glui_panel = glui_joints->add_panel("Char");
+	// Initialize scaling
+	joint_ui_data->setDOF(Keyframe::CHAR_SCALE_X, 1.0);
+	joint_ui_data->setDOF(Keyframe::CHAR_SCALE_Y, 1.0);
+	joint_ui_data->setDOF(Keyframe::CHAR_SCALE_Z, 1.0);
 
-	// Create controls to specify right arm
-	glui_panel = glui_joints->add_panel("Right arm");
-
-	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "shoulder pitch:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::R_SHOULDER_PITCH));
-	glui_spinner->set_float_limits(SHOULDER_PITCH_MIN, SHOULDER_PITCH_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "translate x:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::CHAR_TRANSLATE_X));
+	glui_spinner->set_float_limits(FULL_TRANSLATE_X_MIN, FULL_TRANSLATE_X_MAX, GLUI_LIMIT_CLAMP);
 	glui_spinner->set_speed(SPINNER_SPEED);
 
-	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "shoulder yaw:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::R_SHOULDER_YAW));
-	glui_spinner->set_float_limits(SHOULDER_YAW_MIN, SHOULDER_YAW_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "translate y:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::CHAR_TRANSLATE_Y));
+	glui_spinner->set_float_limits(FULL_TRANSLATE_Y_MIN, FULL_TRANSLATE_Y_MAX, GLUI_LIMIT_CLAMP);
 	glui_spinner->set_speed(SPINNER_SPEED);
 
-	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "shoulder roll:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::R_SHOULDER_ROLL));
-	glui_spinner->set_float_limits(SHOULDER_ROLL_MIN, SHOULDER_ROLL_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "translate z:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::CHAR_TRANSLATE_Z));
+	glui_spinner->set_float_limits(FULL_TRANSLATE_Z_MIN, FULL_TRANSLATE_Z_MAX, GLUI_LIMIT_CLAMP);
 	glui_spinner->set_speed(SPINNER_SPEED);
 
-	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "elbow:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::R_ELBOW));
-	glui_spinner->set_float_limits(ELBOW_MIN, ELBOW_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "rotate x:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::CHAR_ROTATE_X));
+	glui_spinner->set_float_limits(FULL_ROTATE_X_MIN, FULL_ROTATE_X_MAX, GLUI_LIMIT_WRAP);
 	glui_spinner->set_speed(SPINNER_SPEED);
 
-	// Create controls to specify left arm
-	glui_panel = glui_joints->add_panel("Left arm");
-
-	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "shoulder pitch:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::L_SHOULDER_PITCH));
-	glui_spinner->set_float_limits(SHOULDER_PITCH_MIN, SHOULDER_PITCH_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "rotate y:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::CHAR_ROTATE_Y));
+	glui_spinner->set_float_limits(FULL_ROTATE_Y_MIN, FULL_ROTATE_Y_MAX, GLUI_LIMIT_WRAP);
 	glui_spinner->set_speed(SPINNER_SPEED);
 
-	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "shoulder yaw:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::L_SHOULDER_YAW));
-	glui_spinner->set_float_limits(SHOULDER_YAW_MIN, SHOULDER_YAW_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "rotate z:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::CHAR_ROTATE_Z));
+	glui_spinner->set_float_limits(FULL_ROTATE_Z_MIN, FULL_ROTATE_Z_MAX, GLUI_LIMIT_WRAP);
 	glui_spinner->set_speed(SPINNER_SPEED);
 
-	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "shoulder roll:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::L_SHOULDER_ROLL));
-	glui_spinner->set_float_limits(SHOULDER_ROLL_MIN, SHOULDER_ROLL_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "scale x:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::CHAR_SCALE_X));
+	glui_spinner->set_float_limits(CHAR_SCALE_X_MIN, CHAR_SCALE_X_MAX, GLUI_LIMIT_WRAP);
 	glui_spinner->set_speed(SPINNER_SPEED);
 
-	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "elbow:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::L_ELBOW));
-	glui_spinner->set_float_limits(ELBOW_MIN, ELBOW_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "scale y:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::CHAR_SCALE_Y));
+	glui_spinner->set_float_limits(CHAR_SCALE_Y_MIN, CHAR_SCALE_Y_MAX, GLUI_LIMIT_WRAP);
 	glui_spinner->set_speed(SPINNER_SPEED);
+
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "scale z:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::CHAR_SCALE_Z));
+	glui_spinner->set_float_limits(CHAR_SCALE_Z_MIN, CHAR_SCALE_Z_MAX, GLUI_LIMIT_WRAP);
+	glui_spinner->set_speed(SPINNER_SPEED);
+
+	// Create controls for the sled
+	glui_joints->add_column(false);
+	glui_panel = glui_joints->add_panel("Sled");
+
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "rotate x:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::SLED_ROTATE_X));
+	glui_spinner->set_float_limits(FULL_ROTATE_X_MIN, FULL_ROTATE_X_MAX, GLUI_LIMIT_WRAP);
+	glui_spinner->set_speed(SPINNER_SPEED);
+
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "rotate y:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::SLED_ROTATE_Y));
+	glui_spinner->set_float_limits(FULL_ROTATE_Y_MIN, FULL_ROTATE_Y_MAX, GLUI_LIMIT_WRAP);
+	glui_spinner->set_speed(SPINNER_SPEED);
+
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "rotate z:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::SLED_ROTATE_Z));
+	glui_spinner->set_float_limits(FULL_ROTATE_Z_MIN, FULL_ROTATE_Z_MAX, GLUI_LIMIT_WRAP);
 
 
 	glui_joints->add_column(false);
+	// Initialize foot angle
+	joint_ui_data->setDOF(Keyframe::R_FOOT_YAW, 45.0);
+	joint_ui_data->setDOF(Keyframe::L_FOOT_YAW, -45.0);
 
+	// Create controls to specify right foot
+	glui_panel = glui_joints->add_panel("Right foot");
 
-	// Create controls to specify right leg
-	glui_panel = glui_joints->add_panel("Right leg");
-
-	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "hip pitch:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::R_HIP_PITCH));
-	glui_spinner->set_float_limits(HIP_PITCH_MIN, HIP_PITCH_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "foot pitch:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::R_FOOT_PITCH));
+	glui_spinner->set_float_limits(FOOT_PITCH_MIN, FOOT_PITCH_MAX, GLUI_LIMIT_CLAMP);
 	glui_spinner->set_speed(SPINNER_SPEED);
 
-	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "hip yaw:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::R_HIP_YAW));
-	glui_spinner->set_float_limits(HIP_YAW_MIN, HIP_YAW_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "foot yaw:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::R_FOOT_YAW));
+	glui_spinner->set_float_limits(FOOT_YAW_MIN, FOOT_YAW_MAX, GLUI_LIMIT_CLAMP);
 	glui_spinner->set_speed(SPINNER_SPEED);
 
-	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "hip roll:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::R_HIP_ROLL));
-	glui_spinner->set_float_limits(HIP_ROLL_MIN, HIP_ROLL_MAX, GLUI_LIMIT_CLAMP);
+	// Create controls to specify left foot
+	glui_panel = glui_joints->add_panel("Left foot");
+
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "foot pitch:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::L_FOOT_PITCH));
+	glui_spinner->set_float_limits(FOOT_PITCH_MIN, FOOT_PITCH_MAX, GLUI_LIMIT_CLAMP);
 	glui_spinner->set_speed(SPINNER_SPEED);
 
-	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "knee:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::R_KNEE));
-	glui_spinner->set_float_limits(KNEE_MIN, KNEE_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "foot yaw:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::L_FOOT_YAW));
+	glui_spinner->set_float_limits(FOOT_YAW_MIN, FOOT_YAW_MAX, GLUI_LIMIT_CLAMP);
 	glui_spinner->set_speed(SPINNER_SPEED);
 
-	// Create controls to specify left leg
-	glui_panel = glui_joints->add_panel("Left leg");
+	// Initialize eye size
+	joint_ui_data->setDOF(Keyframe::EYE_BLINK, 1.0);
+	joint_ui_data->setDOF(Keyframe::EYE_SIZE, 1.0);
 
-	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "hip pitch:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::L_HIP_PITCH));
-	glui_spinner->set_float_limits(HIP_PITCH_MIN, HIP_PITCH_MAX, GLUI_LIMIT_CLAMP);
+	glui_panel = glui_joints->add_panel("Eye");
+
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "eye blink:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::EYE_BLINK));
+	glui_spinner->set_float_limits(EYE_BLINK_MIN, EYE_BLINK_MAX, GLUI_LIMIT_CLAMP);
 	glui_spinner->set_speed(SPINNER_SPEED);
 
-	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "hip yaw:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::L_HIP_YAW));
-	glui_spinner->set_float_limits(HIP_YAW_MIN, HIP_YAW_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "eye size:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::EYE_SIZE));
+	glui_spinner->set_float_limits(EYE_SIZE_MIN, EYE_SIZE_MAX, GLUI_LIMIT_CLAMP);
 	glui_spinner->set_speed(SPINNER_SPEED);
 
-	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "hip roll:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::L_HIP_ROLL));
-	glui_spinner->set_float_limits(HIP_ROLL_MIN, HIP_ROLL_MAX, GLUI_LIMIT_CLAMP);
-	glui_spinner->set_speed(SPINNER_SPEED);
-
-	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "knee:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::L_KNEE));
-	glui_spinner->set_float_limits(KNEE_MIN, KNEE_MAX, GLUI_LIMIT_CLAMP);
-	glui_spinner->set_speed(SPINNER_SPEED);
 
 	//
-        // ***************************************************
+    // ***************************************************
 
 
-        // Create GLUI window (lightsource controls) ************
-        //
-        glui_lightsource = GLUI_Master.create_glui("Light Source Control", 0, 530, Win[1]+64);
+    // Create GLUI window (lightsource controls) ************
+    //
+    glui_lightsource = GLUI_Master.create_glui("Light Source Control", 0, 530, Win[1]+64);
 
 	glui_panel = glui_lightsource->add_panel("");
+    joint_ui_data->setDOF(Keyframe::LIGHT_TRANS_Z, 20.0);
 
-        glui_spinner = glui_lightsource->add_spinner_to_panel(glui_panel, "Translate along z:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::LIGHT_TRANS_Z));
-        glui_spinner->set_float_limits(LIGHT_TRANS_Z_MIN, LIGHT_TRANS_Z_MAX, GLUI_LIMIT_CLAMP);
-        glui_spinner->set_speed(SPINNER_SPEED);
+    glui_spinner = glui_lightsource->add_spinner_to_panel(glui_panel, "Translate along z:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::LIGHT_TRANS_Z));
+    glui_spinner->set_float_limits(LIGHT_TRANS_Z_MIN, LIGHT_TRANS_Z_MAX, GLUI_LIMIT_CLAMP);
+    glui_spinner->set_speed(SPINNER_SPEED);
 
 	glui_spinner = glui_lightsource->add_spinner_to_panel(glui_panel, "Rotate around z:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::LIGHT_ROTATE_Z));
-        glui_spinner->set_float_limits(LIGHT_ROTATE_Z_MIN, LIGHT_ROTATE_Z_MAX, GLUI_LIMIT_WRAP);
-        glui_spinner->set_speed(SPINNER_SPEED);
+    glui_spinner->set_float_limits(LIGHT_ROTATE_Z_MIN, LIGHT_ROTATE_Z_MAX, GLUI_LIMIT_WRAP);
+    glui_spinner->set_speed(SPINNER_SPEED);
 
 
 	// Create GLUI window (keyframe controls) ************
@@ -731,7 +759,8 @@ void initGl(void)
 {
     // glClearColor (red, green, blue, alpha)
     // Ignore the meaning of the 'alpha' value for now
-    glClearColor(0.7f,0.7f,0.9f,1.0f);
+    // Sets the background colour
+    glClearColor(0.529411f,0.80784f,1.0f,1.0f);
 }
 
 
@@ -837,8 +866,9 @@ void lighting()
 {
     // Light variables
     GLfloat light_specular[] = {0.0, 0.5, 1.0, 1.0};
-    GLfloat light_ambient[] = {0.5, 0.5, 0.5, 1.0};
+    GLfloat light_ambient[] = {1.0, 1.0, 1.0, 1.0};
     GLfloat light_diffuse[] = {1.0, 1.0, 1.0, 1.0};
+
     // Change the light position depending on the users' input
     GLfloat light_position[] = {8 * cos(joint_ui_data->getDOF(Keyframe::LIGHT_ROTATE_Z)), 
 				8 * sin(joint_ui_data->getDOF(Keyframe::LIGHT_ROTATE_Z)), 
@@ -853,10 +883,10 @@ void lighting()
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
     // Default material property to normal
-    float mat_specular[4]={0.25f,0.25f,0.25f,1.0f};
-    float mat_diffuse[4]={0.4f,0.4f,0.4f,1.0f};
-    float mat_ambient[4]={0.774597f,0.774597f,0.774597f,1.0f};
-    float mat_shininess[]={0.6 * 128};
+    float mat_specular[4]={0.297254f,0.30829f,0.306678f,1.0f};
+    float mat_diffuse[4]={0.466666f,0.74151f,0.466666f,1.0f};
+    float mat_ambient[4]={0.3f,0.38725f,0.3745f,1.0f};
+    float mat_shininess[]={0.1 * 128};
 
     // Change the material properties depending on the style chosen
     if (materialProp == METALLIC )
@@ -881,12 +911,13 @@ void lighting()
     glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT,mat_ambient);
 }
 
-void setWireframeMat()
+void setMat(float a1, float a2, float a3, float d1, float d2, float d3,
+			float s1, float s2, float s3, float shiny)
 {
-    float mat_specular[4]={0.02f,0.02f,0.02f,1.0f};
-    float mat_diffuse[4]={0.01f,0.01f,0.01f,1.0f};
-    float mat_ambient[4]={0.4f,0.4f,0.4f,1.0f};
-    float mat_shininess[]={.078125 * 128};
+    float mat_specular[4]={s1,s2,s3,1.0f};
+    float mat_diffuse[4]={d1,d2,d3,1.0f};
+    float mat_ambient[4]={a1,a2,a3,1.0f};
+    float mat_shininess[]={shiny * 128};
 
     glMaterialfv(GL_FRONT_AND_BACK,GL_SHININESS,mat_shininess);
     glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR,mat_specular);
@@ -895,21 +926,134 @@ void setWireframeMat()
 }
 
 
-// Draw the penguin
+// Draw the character
 void drawBlob()
 {
-	// Draw the body
+	lighting();
+	// Put into stack so can move/rotate the character
 	glPushMatrix();
-		glTranslatef(joint_ui_data->getDOF(Keyframe::ROOT_TRANSLATE_X),
-					 joint_ui_data->getDOF(Keyframe::ROOT_TRANSLATE_Y),
-					 joint_ui_data->getDOF(Keyframe::ROOT_TRANSLATE_Z));
-		glRotatef(joint_ui_data->getDOF(Keyframe::ROOT_ROTATE_X), 1.0, 0.0, 0.0);
-		glRotatef(joint_ui_data->getDOF(Keyframe::ROOT_ROTATE_Y), 0.0, 1.0, 0.0);
-		glRotatef(joint_ui_data->getDOF(Keyframe::ROOT_ROTATE_Z), 0.0, 0.0, 1.0);
+		// Allow for moving/translating of the character
+		glTranslatef(joint_ui_data->getDOF(Keyframe::CHAR_TRANSLATE_X),
+					 joint_ui_data->getDOF(Keyframe::CHAR_TRANSLATE_Y),
+					 joint_ui_data->getDOF(Keyframe::CHAR_TRANSLATE_Z));
+		glRotatef(joint_ui_data->getDOF(Keyframe::CHAR_ROTATE_X), 1.0, 0.0, 0.0);
+		glRotatef(joint_ui_data->getDOF(Keyframe::CHAR_ROTATE_Y), 0.0, 1.0, 0.0);
+		glRotatef(joint_ui_data->getDOF(Keyframe::CHAR_ROTATE_Z), 0.0, 0.0, 1.0);
+		glScalef(joint_ui_data->getDOF(Keyframe::CHAR_SCALE_X),
+				 joint_ui_data->getDOF(Keyframe::CHAR_SCALE_Y),
+				 joint_ui_data->getDOF(Keyframe::CHAR_SCALE_Z));
 		glColor3f(0.0f, 0.2f, 0.4f);
-		//drawCube();
-		glutSolidSphere(0.5f, 20, 20);
+
+		// Create the body for the character (sphere)
+		glutSolidSphere(0.5f, 30, 30);	
+
+		// Draw the feet
+		glPushMatrix();
+			glTranslatef(0.0f, -0.48f, 0.0f);
+
+			// Left foot
+			glPushMatrix();
+				glTranslatef(-0.26f, 0.0f, 0.0f);
+				glRotatef(joint_ui_data->getDOF(Keyframe::L_FOOT_PITCH), 0.0, 0.0, 1.0);
+                glRotatef(joint_ui_data->getDOF(Keyframe::L_FOOT_YAW), 0.0, 1.0, 0.0);
+				glScalef(2.0f, 1.3f, 1.5f);
+				// Draw foot and move joint
+				glPushMatrix();
+					glTranslatef(-0.04f, 0.0f, 0.0f);
+					glutSolidSphere(0.1f, 20, 20);
+				glPopMatrix();
+			glPopMatrix();
+			// Right foot
+			glPushMatrix();
+				glTranslatef(0.26f, 0.0f, 0.0f);
+				glRotatef(joint_ui_data->getDOF(Keyframe::R_FOOT_PITCH), 0.0, 0.0, 1.0);
+                glRotatef(joint_ui_data->getDOF(Keyframe::R_FOOT_YAW), 0.0, 1.0, 0.0);
+				glScalef(2.0f, 1.3f, 1.5f);
+				// Draw foot and move joint
+				glPushMatrix();
+					glTranslatef(0.04f, 0.0f, 0.0f);
+					glutSolidSphere(0.1f, 20, 20);
+				glPopMatrix();
+			glPopMatrix();
+		glPopMatrix();
+
+		// Draw eyes
+		// Stop lighting from affecting eyes (to reduce creepiness)
+		glDisable (GL_LIGHTING);
+    	glDisable (GL_LIGHT0);
+		glPushMatrix();
+			glTranslatef(0.0, 0.07, 0.31);
+			float eye_size = joint_ui_data->getDOF(Keyframe::EYE_SIZE);
+			glScalef(eye_size, eye_size*joint_ui_data->getDOF(Keyframe::EYE_BLINK), 1.0f);
+			// Left eye
+			glColor3f(1.0, 1.0, 1.0);
+			glPushMatrix();
+				glTranslatef(-0.13, 0.0, 0.0);
+				glutSolidSphere(0.2, 20, 20);
+				// Draw the pupil
+				glColor3f(0.0, 0.0, 0.0);
+				glPushMatrix();
+					glTranslatef(-0.03, 0.01, 0.16);
+					glutSolidSphere(0.07, 20, 20);
+				glPopMatrix();
+			glPopMatrix();
+			// Right eye
+			glColor3f(1.0, 1.0, 1.0);
+			glPushMatrix();
+				glTranslatef(0.13, 0.0, 0.0);
+				glutSolidSphere(0.2, 20, 20);
+				// Draw the pupil
+				glColor3f(0.0, 0.0, 0.0);
+				glPushMatrix();
+					glTranslatef(0.03, 0.01, 0.16);
+					glutSolidSphere(0.07, 20, 20);
+				glPopMatrix();
+			glPopMatrix();
+		glPopMatrix();
 	glPopMatrix();
+}
+
+void drawSled()
+{
+	// Set lighting and material of the sled
+	lighting();
+	setMat(0.0,0.0,0.0,0.5,0.0,0.0,0.7,0.6,0.6,0.25);
+	// Put into stack so can move/rotate the character
+	glPushMatrix();
+		//glTranslatef(2.0f, 0.0f, 0.0f);
+		glTranslatef(0.0f, -0.3f, 0.0f);
+		glRotatef(joint_ui_data->getDOF(Keyframe::SLED_ROTATE_X), 1.0, 0.0, 0.0);
+		glRotatef(joint_ui_data->getDOF(Keyframe::SLED_ROTATE_Y), 0.0, 1.0, 0.0);
+		glRotatef(joint_ui_data->getDOF(Keyframe::SLED_ROTATE_Z), 0.0, 0.0, 1.0);
+		
+		// Back of sled
+		glPushMatrix();
+			gluCylinder(qobj, 0.25f, 0.25f, 1.2f, 10, 2);
+		
+			// Draw the first cap
+			gluQuadricOrientation(qobj, GLU_INSIDE);
+			gluDisk(qobj, 0.0f, 0.25f, 10, 1.0f);
+			glTranslatef(0.0f, 0.0f, 1.2f);
+
+			// Draw the second cap
+			gluQuadricOrientation(qobj, GLU_OUTSIDE);
+			gluDisk(qobj, 0.0f, 0.25f, 10, 1.0f);
+		glPopMatrix();
+
+		// Bottom of the sled
+		glPushMatrix();
+			// NOTE: Normalizing necessary for material to be displayed correctly
+			glEnable(GL_NORMALIZE);
+			glTranslatef(0.6f, -0.19f, 0.6f);
+			glScalef(0.65f, 0.05f, 0.6f);
+			drawCube();
+		glPopMatrix();
+
+	glPopMatrix();
+
+	glDisable(GL_NORMALIZE);
+	glDisable (GL_LIGHTING);
+    glDisable (GL_LIGHT0);
 }
 
 
@@ -963,7 +1107,18 @@ void display(void)
 
 	// Enable textures and bind our particle
 	glPushMatrix();
+		glTranslatef(joint_ui_data->getDOF(Keyframe::ROOT_TRANSLATE_X),
+					 joint_ui_data->getDOF(Keyframe::ROOT_TRANSLATE_Y),
+					 joint_ui_data->getDOF(Keyframe::ROOT_TRANSLATE_Z));
+		glRotatef(joint_ui_data->getDOF(Keyframe::ROOT_ROTATE_X), 1.0, 0.0, 0.0);
+		glRotatef(joint_ui_data->getDOF(Keyframe::ROOT_ROTATE_Y), 0.0, 1.0, 0.0);
+		glRotatef(joint_ui_data->getDOF(Keyframe::ROOT_ROTATE_Z), 0.0, 0.0, 1.0);
+		glScalef(joint_ui_data->getDOF(Keyframe::ROOT_SCALE_X),
+				 joint_ui_data->getDOF(Keyframe::ROOT_SCALE_Y),
+				 joint_ui_data->getDOF(Keyframe::ROOT_SCALE_Z));
+
 		drawBlob();
+		drawSled();
 
 		// Render the snow
 		snow->renderParticles();
@@ -1028,42 +1183,42 @@ void drawCube()
 {
 	glBegin(GL_QUADS);
 		// draw front face
-		glColor3f(0.0f, 1.0f, 0.0f); // Green!
+		glNormal3f( 0.0,  0.0, 1.0);
 		glVertex3f(-1.0, -1.0, 1.0);
 		glVertex3f( 1.0, -1.0, 1.0);
 		glVertex3f( 1.0,  1.0, 1.0);
 		glVertex3f(-1.0,  1.0, 1.0);
 
 		// draw back face
-		glColor3f(1.0f, 0.5f, 0.0f);     // Orange
+		glNormal3f( 0.0,  0.0, -1.0);
 		glVertex3f( 1.0, -1.0, -1.0);
 		glVertex3f(-1.0, -1.0, -1.0);
 		glVertex3f(-1.0,  1.0, -1.0);
 		glVertex3f( 1.0,  1.0, -1.0);
 
 		// draw left face
-		glColor3f(1.0f, 0.0f, 0.0f);     // Red
+		glNormal3f(-1.0,  0.0,  0.0);
 		glVertex3f(-1.0, -1.0, -1.0);
 		glVertex3f(-1.0, -1.0,  1.0);
 		glVertex3f(-1.0,  1.0,  1.0);
 		glVertex3f(-1.0,  1.0, -1.0);
 
 		// draw right face
-		glColor3f(1.0f, 1.0f, 0.0f);     // Yellow
+		glNormal3f( 1.0,  0.0,  0.0);
 		glVertex3f( 1.0, -1.0,  1.0);
 		glVertex3f( 1.0, -1.0, -1.0);
 		glVertex3f( 1.0,  1.0, -1.0);
 		glVertex3f( 1.0,  1.0,  1.0);
 
 		// draw top
-		glColor3f(0.0f, 0.0f, 1.0f);     // Blue
+		glNormal3f( 0.0,  1.0,  0.0);
 		glVertex3f(-1.0,  1.0,  1.0);
 		glVertex3f( 1.0,  1.0,  1.0);
 		glVertex3f( 1.0,  1.0, -1.0);
 		glVertex3f(-1.0,  1.0, -1.0);
 
 		// draw bottom
-		glColor3f(1.0f, 0.0f, 1.0f);     // Magenta
+		glNormal3f( 0.0, -1.0,  0.0);
 		glVertex3f(-1.0, -1.0, -1.0);
 		glVertex3f( 1.0, -1.0, -1.0);
 		glVertex3f( 1.0, -1.0,  1.0);
