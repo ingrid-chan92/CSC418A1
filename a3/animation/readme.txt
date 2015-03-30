@@ -72,7 +72,7 @@ TODO
 
 SKYBOX
 -------------------------------------------------------------
-Sources: http://ogldev.atspace.co.uk/index.html
+Sources: http://www.davidwparker.com/2012/12/26/opengl-screencast-video-21-skybox/
 
 SNOW
 -------------------------------------------------------------
