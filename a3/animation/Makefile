@@ -51,7 +51,7 @@ PROGRAM	          = main
 CSRCS         = $(SUB_DIR)image_DXT.c $(SUB_DIR)image_helper.c $(SUB_DIR)stb_image_aug.c $(SUB_DIR)SOIL.c
 
 # Define all C++ source files here
-CPPSRCS       = main.cpp vector.cpp particle.cpp
+CPPSRCS       = main.cpp vector.cpp particle.cpp Util.cpp
 
 ##############################################################################
 # Define additional rules that make should know about in order to compile our

@@ -49,6 +49,7 @@
 #include "timer.h"
 #include "vector.h"
 #include "particle.h"
+#include "Util.h"
 
 #define X .525731112119133606 
 #define Z .850650808352039932
@@ -1056,6 +1057,73 @@ void drawSled()
     glDisable (GL_LIGHT0);
 }
 
+void drawSkybox() {
+	float D = 50.0f;
+
+	// Load textures for skybox (NEEDS CONFIGURATION
+	GLUint sky_right = raw_texture_load("sample.bmp", 204, 204);
+	GLUint sky_front = raw_texture_load("sample.bmp", 204, 204);
+	GLUint sky_left = raw_texture_load("sample.bmp", 204, 204);
+	GLUint sky_back = raw_texture_load("sample.bmp", 204, 204);
+	GLUint sky_up = raw_texture_load("sample.bmp", 204, 204);
+	GLUint sky_down = raw_texture_load("sample.bmp", 204, 204);
+
+ 	glColor3f(1.0, 1.0, 1.0);
+	glEnable(GL_TEXTURE_2D);
+	 
+		// Sides 
+		glBindTexture(GL_TEXTURE_2D, sky_right);
+		glBegin(GL_QUADS);
+			glTexCoord2f(0,0); glVertex3f(-D,-D,-D);
+			glTexCoord2f(1,0); glVertex3f(+D,-D,-D);
+			glTexCoord2f(1,1); glVertex3f(+D,+D,-D);
+			glTexCoord2f(0,1); glVertex3f(-D,+D,-D);
+		glEnd();
+
+		glBindTexture(GL_TEXTURE_2D, sky_front);
+		glBegin(GL_QUADS);
+			glTexCoord2f(0,0); glVertex3f(+D,-D,-D);
+			glTexCoord2f(1,0); glVertex3f(+D,-D,+D);
+			glTexCoord2f(1,1); glVertex3f(+D,+D,+D);
+			glTexCoord2f(0,1); glVertex3f(+D,+D,-D);
+		glEnd();
+
+		glBindTexture(GL_TEXTURE_2D, sky_left);
+		glBegin(GL_QUADS);
+			glTexCoord2f(0,0); glVertex3f(+D,-D,+D);
+			glTexCoord2f(1,0); glVertex3f(-D,-D,+D);
+			glTexCoord2f(1,1); glVertex3f(-D,+D,+D);
+			glTexCoord2f(0,1); glVertex3f(+D,+D,+D);
+		glEnd();
+
+		glBindTexture(GL_TEXTURE_2D, sky_back);
+		glBegin(GL_QUADS);
+			glTexCoord2f(0,0); glVertex3f(-D,-D,+D);
+			glTexCoord2f(1,0); glVertex3f(-D,-D,-D);
+			glTexCoord2f(1,1); glVertex3f(-D,+D,-D);
+			glTexCoord2f(0,1); glVertex3f(-D,+D,+D);
+		glEnd();
+		 
+		// Top and Bottom
+		glBindTexture(GL_TEXTURE_2D, sky_up);
+		glBegin(GL_QUADS);
+			glTexCoord2f(0,0); glVertex3f(-D,+D,-D);
+			glTexCoord2f(1,0); glVertex3f(+D,+D,-D);
+			glTexCoord2f(1,1); glVertex3f(+D,+D,+D);
+			glTexCoord2f(0,1); glVertex3f(-D,+D,+D);
+		glEnd();
+
+		glBindTexture(GL_TEXTURE_2D, sky_down);
+		glBegin(GL_QUADS);
+			glTexCoord2f(1,1); glVertex3f(+D,-D,-D);
+			glTexCoord2f(0,1); glVertex3f(-D,-D,-D);
+			glTexCoord2f(0,0); glVertex3f(-D,-D,+D);
+			glTexCoord2f(1,0); glVertex3f(+D,-D,+D);
+		glEnd();
+	 
+	glDisable(GL_TEXTURE_2D); 
+
+}
 
 // display callback
 //
@@ -1116,9 +1184,10 @@ void display(void)
 		glScalef(joint_ui_data->getDOF(Keyframe::ROOT_SCALE_X),
 				 joint_ui_data->getDOF(Keyframe::ROOT_SCALE_Y),
 				 joint_ui_data->getDOF(Keyframe::ROOT_SCALE_Z));
-
+		
 		drawBlob();
 		drawSled();
+		drawSkybox();
 
 		// Render the snow
 		snow->renderParticles();
@@ -1139,7 +1208,6 @@ void display(void)
     // (this prevents flickering).
     glutSwapBuffers();
 }
-
 
 // Handles mouse button pressed / released events
 void mouse(int button, int state, int x, int y)

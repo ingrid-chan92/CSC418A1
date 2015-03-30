@@ -34,6 +34,10 @@ void ParticleEffect::initParticles()
 	// Seed random
 	srand((int)time(NULL));
 
+	part_size = 0.05f;
+	win[0] = WINDOW_W;
+	win[1] = WINDOW_H;
+
 	// Initialize target direction
 	for (int p = 0; p < MAX_PARTICLES; p++)
 	{

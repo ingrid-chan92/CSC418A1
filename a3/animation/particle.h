@@ -31,9 +31,11 @@ public:
 	void clearParticles();
 	bool loadBitmapTexture(char* filename);
 
+	GLubyte face[6][64][64][3];
+
 	GLuint txParticle;			// Holds the info for the texture of the particle
-	float part_size = 0.05f;	// Size of the particle
-	int win[2] = {WINDOW_W, WINDOW_H};					// window (x,y) size
+	float part_size;			// Size of the particle
+	int win[2];					// window (x,y) size
 	
 
 	// TODO: Create a clearParticles function -- 

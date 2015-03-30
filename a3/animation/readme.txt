@@ -70,6 +70,10 @@ TODO
 - ???
 
 
+SKYBOX
+-------------------------------------------------------------
+Sources: http://ogldev.atspace.co.uk/index.html
+
 SNOW
 -------------------------------------------------------------
 - Most of the code for the snow is implemented in particle.h and particle.cpp
