@@ -1,0 +1,28 @@
+*See "animation" folder for the animation REPORT.txt
+
+Work Distribution:
+Ingrid:
+- Raytracer:
+	- Intersection Code for Ray-Sphere
+	- Intersection Code for Ray-Square
+	- Phong Shade for point light source
+	- Anti-Aliasing
+
+Karin:
+- Raytracer:
+	- Ray-casting
+	- Anti-Aliasing
+
+Implementation:
+Ray-casting/Anti-Aliasing can be found in the main raytracer.cpp file. Anti-Aliasing is done by shooting four rays at a pixel. Each ray offset by 0.5 at each axis (e.g. (0,0), (0, 0.5), (0.5, 0), (0.5, 0.5)).
+
+Ray-Sphere intersection follows the algorithm found in the Advanced Ray Tracing Notes (Using the quadratic formula). Ray-Square intersection follows the algorithm found in the "Computing Ray-Triangles Intersections", getting an intersection point by converting the formula [P1 - Pt].n = 0 into t = -cz/dirz, and determining if the ray intersects by checking if the intersection point lays within the square. Both are found in scene_object
+
+Lighting is  done in light_source.cpp. Light_source assumes all variables are set and ready by the time it is called. Using the Light Source calculations in the "Basic Lighting and Reflection" notes, light_source.cpp calculates the Ambient/Diffuse/Specular of the pixel
+
+No new structures were introduced in the implementation
+
+Attached Images:
+sig_1/sig_2: Scene signatures with only the diffuse lighting
+phong_ad1/2: Images with diffuse and ambient (These are the diffuse1, diffuse2 images)
+phong_ads1/2: Images with diffuse, ambient, and speculat lighting (These are the phong1, phong2 images)

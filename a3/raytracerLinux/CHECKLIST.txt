@@ -52,6 +52,6 @@ _X_   (15 points) Part 1d     Phong shading (ambient, diffuse, and specular comp
                   
 _X_   ( 5 points) Part 1e     Anti-aliasing
 
-___   (10 points) Part 1f     Written report
+_X_   (10 points) Part 1f     Written report
 
 -------------------------------------------------------------------------------- 
