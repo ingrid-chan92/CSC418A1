@@ -1,0 +1,32 @@
+* See RaytracerLinux for Raytracer Report
+
+Work Distribution:
+- Ingrid
+	- Skybox
+- Karin
+	- Snow particle effect
+	- Character Model/Sled Model
+
+Snow Effect:
+--------------------------------
+- Snow is implemented in particle.h and particle.cpp
+- Calls to make the snow work in "main.cpp" can be found by finding on "snow"
+	- Snow is set in "initDS" 
+	- Initializing of the snow called in "main"
+	- Clearing of the snow called in "animateButton"
+	- Reviving/Updating/Rendering snow called in "display"
+	
+- Used the SOIL library to read the texture. Src files used to reduce space
+- References:
+	https://78462f86-a-306c325b-s-sites.googlegroups.com/a/fullonsoftware.co.uk/www/snippets/content/OpenGL_-_Particle_System_Tutorial_-_Blending_-_PointSprites.pdf?attachauth=ANoY7cpiAk85m-br_0j-ARyFYkA-YToaXVHkTgoVCFnHzGYnbvFIxnt2efJgz4JKfVVzQbedGMhWkQUR8CDSYYyEAx91quNgUcOuG-7Pc50OOgdPC5SGgVYfGFlqnLPJj9RlLveE6ScdKeb9WSGOB5sxQ6kLgPEeFXa2vjzRqLRknL-IBLq_xlp8j_mx3pvSI9Nb500TRSwGKxoGNoKefNKrd6Jmv6O-7wS99TW5IeY5DOR9zZvjeTfLm233dj9KDa4IktTHxCbxPdkT00B3PUhY1BgRFR-tNRoXf8NUWgGZSPvIy_fk-eI%3D&attredirects=0
+
+
+Skybox:
+--------------------------------
+- Skybox is implemented in main.cpp with utility found in Util.cpp. It is a cube with inward-facing sides surrounding the scene.
+- Util.cpp is borrowed directly from Skybox Documentation below
+- Relevant methods: drawSkybox(), initDS()
+
+- References:
+	Skybox Documentation: http://www.davidwparker.com/2012/12/26/opengl-screencast-video-21-skybox/
+	Toon Snow skybox images: http://www.redsorceress.com/skybox.html
