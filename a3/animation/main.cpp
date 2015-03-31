@@ -1145,6 +1145,34 @@ void drawSkybox() {
 
 }
 
+void drawTree() {
+	glPushMatrix();
+		lighting();
+
+		// Trunk
+		glPushMatrix();
+			setMat(0.1,0.05,0.02, 0.71,0.43,0.18,0.39,0.27,0.17,1.0);
+			glRotatef(90.0f, 1.0, 0.0, 0.0);
+			gluCylinder(qobj, 0.1f, 0.25f, 5.0f, 10, 2);
+		glPopMatrix();
+
+		// Branches 
+		glPushMatrix();
+			setMat(0.0215,0.1745,0.0215, 0.07568, 0.61424, 0.07568,0.633, 0.727811, 0.633, 0.6);
+			glRotatef(90.0f, 1.0, 0.0, 0.0);
+			gluCylinder(qobj, 0.0f, 1.0f, 2.5f, 10, 2);
+		glPopMatrix();
+
+		glPushMatrix();
+			setMat(0.0215,0.1745,0.0215, 0.07568, 0.61424, 0.07568,0.633, 0.727811, 0.633, 0.6);
+			glRotatef(90.0f, 1.0, 0.0, 0.0);
+			glTranslatef(0.0f, 0.0f, 1.25f);
+			gluCylinder(qobj, 0.0f, 1.0f, 2.5f, 10, 2);
+		glPopMatrix();
+
+	glPopMatrix();
+}
+
 // display callback
 //
 // README: This gets called by the event handler
@@ -1204,7 +1232,8 @@ void display(void)
 		glScalef(joint_ui_data->getDOF(Keyframe::ROOT_SCALE_X),
 				 joint_ui_data->getDOF(Keyframe::ROOT_SCALE_Y),
 				 joint_ui_data->getDOF(Keyframe::ROOT_SCALE_Z));
-		
+
+		drawTree();
 		drawBlob();
 		drawSled();
 		drawSkybox();

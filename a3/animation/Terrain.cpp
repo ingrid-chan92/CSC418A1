@@ -44,8 +44,7 @@ void Terrain::renderTerrain() {
 		glBindTexture(GL_TEXTURE_2D, texture);
 
 		// Adjust terrain so it is in the center of map
-		glTranslatef(-MAP_X/2.0f * MAP_SCALE, -10.0f, MAP_Z/2.0f * MAP_SCALE);
-		glScalef(50.0f, 50.0f, 50.0f);
+		glTranslatef(-MAP_X/2.0f * MAP_SCALE, -20.0f, MAP_Z/2.0f * MAP_SCALE);
 
 		// we are going to loop through all of our terrain's data points,
 		// but we only want to draw one triangle strip for each set along the x-axis.
