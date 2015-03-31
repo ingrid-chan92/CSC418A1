@@ -191,6 +191,14 @@ const float LIGHT_ROTATE_Z_MAX 	 =  180.0;
 // Particle initialization
 ParticleEffect* snow;
 
+// Skybox images
+GLUint sky_right;
+GLUint sky_front;
+GLUint sky_left;
+GLUint sky_back;
+GLUint sky_up;
+GLUint sky_down;
+
 // Stores quadratic objects
 GLUquadricObj *qobj; 
 
@@ -270,6 +278,14 @@ int main(int argc, char** argv)
 	// Initialize the snow
     snow->initParticles();
 
+	// Load textures for skybox
+	sky_right = loadTexBMP("skyboxImages/toon_snow_right.bmp");
+	sky_front = loadTexBMP("skyboxImages/toon_snow_back.bmp");
+	sky_left = loadTexBMP("skyboxImages/toon_snow_left.bmp");
+	sky_back = loadTexBMP("skyboxImages/toon_snow_front.bmp");
+	sky_up = loadTexBMP("skyboxImages/toon_snow_top.bmp");
+	sky_down = loadTexBMP("skyboxImages/toon_snow_top.bmp");
+
     // Invoke the standard GLUT main event loop
     glutMainLoop();
 
@@ -311,6 +327,7 @@ void initGlut(int argc, char** argv)
     glutDisplayFunc(display);	// Call display whenever new frame needed
 	glutMouseFunc(mouse);		// Call mouse whenever mouse button pressed
 	glutMotionFunc(motion);		// Call motion whenever mouse moves while button pressed
+
 }
 
 
@@ -1057,17 +1074,13 @@ void drawSled()
     glDisable (GL_LIGHT0);
 }
 
+/**
+ * Code for Skybox drawing adapted from
+ * http://www.davidwparker.com/2012/12/26/opengl-screencast-video-21-skybox/
+ *
+ */
 void drawSkybox() {
-	float D = 50.0f;
-
-	// Load textures for skybox (NEEDS CONFIGURATION
-	GLUint sky_right = raw_texture_load("sample.bmp", 204, 204);
-	GLUint sky_front = raw_texture_load("sample.bmp", 204, 204);
-	GLUint sky_left = raw_texture_load("sample.bmp", 204, 204);
-	GLUint sky_back = raw_texture_load("sample.bmp", 204, 204);
-	GLUint sky_up = raw_texture_load("sample.bmp", 204, 204);
-	GLUint sky_down = raw_texture_load("sample.bmp", 204, 204);
-
+	float D = 40.0f;
  	glColor3f(1.0, 1.0, 1.0);
 	glEnable(GL_TEXTURE_2D);
 	 

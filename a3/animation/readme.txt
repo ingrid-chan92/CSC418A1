@@ -72,8 +72,9 @@ TODO
 
 SKYBOX
 -------------------------------------------------------------
-Sources: http://www.davidwparker.com/2012/12/26/opengl-screencast-video-21-skybox/
-
+Sources: 	http://www.davidwparker.com/2012/12/26/opengl-screencast-video-21-skybox/
+			http://www.redsorceress.com/skybox.html
+	
 SNOW
 -------------------------------------------------------------
 - Most of the code for the snow is implemented in particle.h and particle.cpp
