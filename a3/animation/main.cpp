@@ -61,7 +61,7 @@
 
 const float PI = 3.14159;
 
-const float SPINNER_SPEED = 0.1;
+const float SPINNER_SPEED = 0.5;
 
 
 // --------------- USER INTERFACE VARIABLES -----------------
@@ -152,12 +152,12 @@ Keyframe* joint_ui_data;
 
 // README: To change the range of a particular DOF,
 // simply change the appropriate min/max values below
-const float FULL_TRANSLATE_X_MIN = -50.0;
-const float FULL_TRANSLATE_X_MAX =  50.0;
-const float FULL_TRANSLATE_Y_MIN = -50.0;
-const float FULL_TRANSLATE_Y_MAX =  50.0;
-const float FULL_TRANSLATE_Z_MIN = -50.0;
-const float FULL_TRANSLATE_Z_MAX =  50.0;
+const float FULL_TRANSLATE_X_MIN = -100.0;
+const float FULL_TRANSLATE_X_MAX =  100.0;
+const float FULL_TRANSLATE_Y_MIN = -100.0;
+const float FULL_TRANSLATE_Y_MAX =  100.0;
+const float FULL_TRANSLATE_Z_MIN = -100.0;
+const float FULL_TRANSLATE_Z_MAX =  100.0;
 const float FULL_ROTATE_X_MIN    = -180.0;
 const float FULL_ROTATE_X_MAX    =  180.0;
 const float FULL_ROTATE_Y_MIN    = -180.0;
@@ -645,6 +645,47 @@ void initGlui()
 	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "rotate z:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::SLED_ROTATE_Z));
 	glui_spinner->set_float_limits(FULL_ROTATE_Z_MIN, FULL_ROTATE_Z_MAX, GLUI_LIMIT_WRAP);
 
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "translate x:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::SLED_TRANSLATE_X));
+	glui_spinner->set_float_limits(FULL_TRANSLATE_X_MIN, FULL_TRANSLATE_X_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner->set_speed(SPINNER_SPEED);
+
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "translate y:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::SLED_TRANSLATE_Y));
+	glui_spinner->set_float_limits(FULL_TRANSLATE_Y_MIN, FULL_TRANSLATE_Y_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner->set_speed(SPINNER_SPEED);
+
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "translate z:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::SLED_TRANSLATE_Z));
+	glui_spinner->set_float_limits(FULL_TRANSLATE_Z_MIN, FULL_TRANSLATE_Z_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner->set_speed(SPINNER_SPEED);
+
+
+	// Create controls for the sled + blob
+	glui_joints->add_column(false);
+	glui_panel = glui_joints->add_panel("Sled + Char");
+
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "rotate x:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::CHAR_SLED_ROTATE_X));
+	glui_spinner->set_float_limits(FULL_ROTATE_X_MIN, FULL_ROTATE_X_MAX, GLUI_LIMIT_WRAP);
+	glui_spinner->set_speed(SPINNER_SPEED);
+
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "rotate y:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::CHAR_SLED_ROTATE_Y));
+	glui_spinner->set_float_limits(FULL_ROTATE_Y_MIN, FULL_ROTATE_Y_MAX, GLUI_LIMIT_WRAP);
+	glui_spinner->set_speed(SPINNER_SPEED);
+
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "rotate z:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::CHAR_SLED_ROTATE_Z));
+	glui_spinner->set_float_limits(FULL_ROTATE_Z_MIN, FULL_ROTATE_Z_MAX, GLUI_LIMIT_WRAP);
+
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "translate x:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::CHAR_SLED_TRANSLATE_X));
+	glui_spinner->set_float_limits(FULL_TRANSLATE_X_MIN, FULL_TRANSLATE_X_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner->set_speed(SPINNER_SPEED);
+
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "translate y:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::CHAR_SLED_TRANSLATE_Y));
+	glui_spinner->set_float_limits(FULL_TRANSLATE_Y_MIN, FULL_TRANSLATE_Y_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner->set_speed(SPINNER_SPEED);
+
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "translate z:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::CHAR_SLED_TRANSLATE_Z));
+	glui_spinner->set_float_limits(FULL_TRANSLATE_Z_MIN, FULL_TRANSLATE_Z_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner->set_speed(SPINNER_SPEED);
+
+
 
 	glui_joints->add_column(false);
 	// Initialize foot angle
@@ -1047,6 +1088,10 @@ void drawSled()
 	glPushMatrix();
 		//glTranslatef(2.0f, 0.0f, 0.0f);
 		glTranslatef(0.0f, -0.3f, 0.0f);
+		glTranslatef(joint_ui_data->getDOF(Keyframe::SLED_TRANSLATE_X),
+					 joint_ui_data->getDOF(Keyframe::SLED_TRANSLATE_Y),
+					 joint_ui_data->getDOF(Keyframe::SLED_TRANSLATE_Z));
+
 		glRotatef(joint_ui_data->getDOF(Keyframe::SLED_ROTATE_X), 1.0, 0.0, 0.0);
 		glRotatef(joint_ui_data->getDOF(Keyframe::SLED_ROTATE_Y), 0.0, 1.0, 0.0);
 		glRotatef(joint_ui_data->getDOF(Keyframe::SLED_ROTATE_Z), 0.0, 0.0, 1.0);
@@ -1239,27 +1284,38 @@ void display(void)
 				 joint_ui_data->getDOF(Keyframe::ROOT_SCALE_Z));
 		
 		// Draw trees over the terrain
-		float offset_i = 1.0f;
+		float offset_i = 1.5f;
 		float offset_j = 0.0f;
 		for (float i = -100.0; i < 100.0f; i+= 10.0f) {
 			for (float j = -100.0; j < 100.0f; j+= 10.0f) {			
 				drawTree(i + offset_i, j + offset_j); 
 	
 				// Offset the tree slightly so they are not aligned
-				offset_j++;
-				if (offset_j > 6.0f) {
+				offset_j+= 0.5;
+				if (offset_j > 5.0f) {
 					offset_j = 0;
 				}
 
-				offset_i++;
+				offset_i+= 0.5;
 				if (offset_i > 3.0f) {
 					offset_i = 0;
 				}
 			}
 		}	
 
-		drawBlob();
-		drawSled();	
+		glPushMatrix();
+			// Move both char and sled at once
+			glTranslatef(joint_ui_data->getDOF(Keyframe::CHAR_SLED_TRANSLATE_X),
+					 joint_ui_data->getDOF(Keyframe::CHAR_SLED_TRANSLATE_Y),
+					 joint_ui_data->getDOF(Keyframe::CHAR_SLED_TRANSLATE_Z));
+
+			glRotatef(joint_ui_data->getDOF(Keyframe::CHAR_SLED_ROTATE_X), 1.0, 0.0, 0.0);
+			glRotatef(joint_ui_data->getDOF(Keyframe::CHAR_SLED_ROTATE_Y), 0.0, 1.0, 0.0);
+			glRotatef(joint_ui_data->getDOF(Keyframe::CHAR_SLED_ROTATE_Z), 0.0, 0.0, 1.0);
+
+			drawBlob();
+			drawSled();	
+		glPopMatrix();
 
 		drawSkybox();
 		terrain.renderTerrain();	
