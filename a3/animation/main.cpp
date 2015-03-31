@@ -1087,66 +1087,71 @@ void drawSled()
  *
  */
 void drawSkybox() {
-	float D = 100.0f;
- 	glColor3f(1.0, 1.0, 1.0);
-	glEnable(GL_TEXTURE_2D);
-	 
-		// Sides 
-		glBindTexture(GL_TEXTURE_2D, sky_right);
-		glBegin(GL_QUADS);
-			glTexCoord2f(0,0); glVertex3f(-D,-D,-D);
-			glTexCoord2f(1,0); glVertex3f(+D,-D,-D);
-			glTexCoord2f(1,1); glVertex3f(+D,+D,-D);
-			glTexCoord2f(0,1); glVertex3f(-D,+D,-D);
-		glEnd();
+	glPushMatrix();
 
-		glBindTexture(GL_TEXTURE_2D, sky_front);
-		glBegin(GL_QUADS);
-			glTexCoord2f(0,0); glVertex3f(+D,-D,-D);
-			glTexCoord2f(1,0); glVertex3f(+D,-D,+D);
-			glTexCoord2f(1,1); glVertex3f(+D,+D,+D);
-			glTexCoord2f(0,1); glVertex3f(+D,+D,-D);
-		glEnd();
-
-		glBindTexture(GL_TEXTURE_2D, sky_left);
-		glBegin(GL_QUADS);
-			glTexCoord2f(0,0); glVertex3f(+D,-D,+D);
-			glTexCoord2f(1,0); glVertex3f(-D,-D,+D);
-			glTexCoord2f(1,1); glVertex3f(-D,+D,+D);
-			glTexCoord2f(0,1); glVertex3f(+D,+D,+D);
-		glEnd();
-
-		glBindTexture(GL_TEXTURE_2D, sky_back);
-		glBegin(GL_QUADS);
-			glTexCoord2f(0,0); glVertex3f(-D,-D,+D);
-			glTexCoord2f(1,0); glVertex3f(-D,-D,-D);
-			glTexCoord2f(1,1); glVertex3f(-D,+D,-D);
-			glTexCoord2f(0,1); glVertex3f(-D,+D,+D);
-		glEnd();
+		float D = 400.0f;
+	 	glColor3f(1.0, 1.0, 1.0);
+		glTranslatef(0.0, 20.0f,0.0f);
+		glEnable(GL_TEXTURE_2D);
 		 
-		// Top and Bottom
-		glBindTexture(GL_TEXTURE_2D, sky_up);
-		glBegin(GL_QUADS);
-			glTexCoord2f(0,0); glVertex3f(-D,+D,-D);
-			glTexCoord2f(1,0); glVertex3f(+D,+D,-D);
-			glTexCoord2f(1,1); glVertex3f(+D,+D,+D);
-			glTexCoord2f(0,1); glVertex3f(-D,+D,+D);
-		glEnd();
+			// Sides 
+			glBindTexture(GL_TEXTURE_2D, sky_right);
+			glBegin(GL_QUADS);
+				glTexCoord2f(0,0); glVertex3f(-D,-D,-D);
+				glTexCoord2f(1,0); glVertex3f(+D,-D,-D);
+				glTexCoord2f(1,1); glVertex3f(+D,+D,-D);
+				glTexCoord2f(0,1); glVertex3f(-D,+D,-D);
+			glEnd();
 
-		glBindTexture(GL_TEXTURE_2D, sky_down);
-		glBegin(GL_QUADS);
-			glTexCoord2f(1,1); glVertex3f(+D,-D,-D);
-			glTexCoord2f(0,1); glVertex3f(-D,-D,-D);
-			glTexCoord2f(0,0); glVertex3f(-D,-D,+D);
-			glTexCoord2f(1,0); glVertex3f(+D,-D,+D);
-		glEnd();
-	 
-	glDisable(GL_TEXTURE_2D); 
+			glBindTexture(GL_TEXTURE_2D, sky_front);
+			glBegin(GL_QUADS);
+				glTexCoord2f(0,0); glVertex3f(+D,-D,-D);
+				glTexCoord2f(1,0); glVertex3f(+D,-D,+D);
+				glTexCoord2f(1,1); glVertex3f(+D,+D,+D);
+				glTexCoord2f(0,1); glVertex3f(+D,+D,-D);
+			glEnd();
 
+			glBindTexture(GL_TEXTURE_2D, sky_left);
+			glBegin(GL_QUADS);
+				glTexCoord2f(0,0); glVertex3f(+D,-D,+D);
+				glTexCoord2f(1,0); glVertex3f(-D,-D,+D);
+				glTexCoord2f(1,1); glVertex3f(-D,+D,+D);
+				glTexCoord2f(0,1); glVertex3f(+D,+D,+D);
+			glEnd();
+
+			glBindTexture(GL_TEXTURE_2D, sky_back);
+			glBegin(GL_QUADS);
+				glTexCoord2f(0,0); glVertex3f(-D,-D,+D);
+				glTexCoord2f(1,0); glVertex3f(-D,-D,-D);
+				glTexCoord2f(1,1); glVertex3f(-D,+D,-D);
+				glTexCoord2f(0,1); glVertex3f(-D,+D,+D);
+			glEnd();
+			 
+			// Top and Bottom
+			glBindTexture(GL_TEXTURE_2D, sky_up);
+			glBegin(GL_QUADS);
+				glTexCoord2f(0,0); glVertex3f(-D,+D,-D);
+				glTexCoord2f(1,0); glVertex3f(+D,+D,-D);
+				glTexCoord2f(1,1); glVertex3f(+D,+D,+D);
+				glTexCoord2f(0,1); glVertex3f(-D,+D,+D);
+			glEnd();
+
+			glBindTexture(GL_TEXTURE_2D, sky_down);
+			glBegin(GL_QUADS);
+				glTexCoord2f(1,1); glVertex3f(+D,-D,-D);
+				glTexCoord2f(0,1); glVertex3f(-D,-D,-D);
+				glTexCoord2f(0,0); glVertex3f(-D,-D,+D);
+				glTexCoord2f(1,0); glVertex3f(+D,-D,+D);
+			glEnd();
+		 
+		glDisable(GL_TEXTURE_2D); 
+
+	glPopMatrix();
 }
 
-void drawTree() {
+void drawTree(float x, float z) {
 	glPushMatrix();
+		glTranslatef(x, 0.0f, z);
 		lighting();
 
 		// Trunk
@@ -1160,7 +1165,7 @@ void drawTree() {
 		glPushMatrix();
 			setMat(0.0215,0.1745,0.0215, 0.07568, 0.61424, 0.07568,0.633, 0.727811, 0.633, 0.6);
 			glRotatef(90.0f, 1.0, 0.0, 0.0);
-			gluCylinder(qobj, 0.0f, 1.0f, 2.5f, 10, 2);
+			gluCylinder(qobj, 0.1f, 1.0f, 2.5f, 10, 2);
 		glPopMatrix();
 
 		glPushMatrix();
@@ -1232,12 +1237,32 @@ void display(void)
 		glScalef(joint_ui_data->getDOF(Keyframe::ROOT_SCALE_X),
 				 joint_ui_data->getDOF(Keyframe::ROOT_SCALE_Y),
 				 joint_ui_data->getDOF(Keyframe::ROOT_SCALE_Z));
+		
+		// Draw trees over the terrain
+		float offset_i = 1.0f;
+		float offset_j = 0.0f;
+		for (float i = -100.0; i < 100.0f; i+= 10.0f) {
+			for (float j = -100.0; j < 100.0f; j+= 10.0f) {			
+				drawTree(i + offset_i, j + offset_j); 
+	
+				// Offset the tree slightly so they are not aligned
+				offset_j++;
+				if (offset_j > 6.0f) {
+					offset_j = 0;
+				}
 
-		drawTree();
+				offset_i++;
+				if (offset_i > 3.0f) {
+					offset_i = 0;
+				}
+			}
+		}	
+
 		drawBlob();
-		drawSled();
+		drawSled();	
+
 		drawSkybox();
-		terrain.renderTerrain();		
+		terrain.renderTerrain();	
 
 		// Render the snow
 		snow->renderParticles();
