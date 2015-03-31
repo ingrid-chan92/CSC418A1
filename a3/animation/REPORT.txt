@@ -30,3 +30,12 @@ Skybox:
 - References:
 	Skybox Documentation: http://www.davidwparker.com/2012/12/26/opengl-screencast-video-21-skybox/
 	Toon Snow skybox images: http://www.redsorceress.com/skybox.html
+
+
+Terrain:
+--------------------------------
+- Terrain is implemented in Terrain.cpp. InitTerrain() will grab all initial starting points for the vertices and the texture to be used for rendering and is called in Main(). RenderTerrain() will draw the terrain onto the scene
+- References:
+	Code Adapted from: http://www.codeproject.com/Articles/14154/OpenGL-Terrain-Generation-An-Introduction
+
+

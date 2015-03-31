@@ -50,6 +50,7 @@
 #include "vector.h"
 #include "particle.h"
 #include "Util.h"
+#include "Terrain.h"
 
 #define X .525731112119133606 
 #define Z .850650808352039932
@@ -151,12 +152,12 @@ Keyframe* joint_ui_data;
 
 // README: To change the range of a particular DOF,
 // simply change the appropriate min/max values below
-const float FULL_TRANSLATE_X_MIN = -5.0;
-const float FULL_TRANSLATE_X_MAX =  5.0;
-const float FULL_TRANSLATE_Y_MIN = -5.0;
-const float FULL_TRANSLATE_Y_MAX =  5.0;
-const float FULL_TRANSLATE_Z_MIN = -5.0;
-const float FULL_TRANSLATE_Z_MAX =  5.0;
+const float FULL_TRANSLATE_X_MIN = -50.0;
+const float FULL_TRANSLATE_X_MAX =  50.0;
+const float FULL_TRANSLATE_Y_MIN = -50.0;
+const float FULL_TRANSLATE_Y_MAX =  50.0;
+const float FULL_TRANSLATE_Z_MIN = -50.0;
+const float FULL_TRANSLATE_Z_MAX =  50.0;
 const float FULL_ROTATE_X_MIN    = -180.0;
 const float FULL_ROTATE_X_MAX    =  180.0;
 const float FULL_ROTATE_Y_MIN    = -180.0;
@@ -198,6 +199,9 @@ GLUint sky_left;
 GLUint sky_back;
 GLUint sky_up;
 GLUint sky_down;
+
+// Terrain 
+Terrain terrain;
 
 // Stores quadratic objects
 GLUquadricObj *qobj; 
@@ -285,6 +289,9 @@ int main(int argc, char** argv)
 	sky_back = loadTexBMP("skyboxImages/toon_snow_front.bmp");
 	sky_up = loadTexBMP("skyboxImages/toon_snow_top.bmp");
 	sky_down = loadTexBMP("skyboxImages/toon_snow_top.bmp");
+
+	// Init Terrain
+	terrain.initTerrain();
 
     // Invoke the standard GLUT main event loop
     glutMainLoop();
@@ -1080,7 +1087,7 @@ void drawSled()
  *
  */
 void drawSkybox() {
-	float D = 40.0f;
+	float D = 100.0f;
  	glColor3f(1.0, 1.0, 1.0);
 	glEnable(GL_TEXTURE_2D);
 	 
@@ -1201,6 +1208,7 @@ void display(void)
 		drawBlob();
 		drawSled();
 		drawSkybox();
+		terrain.renderTerrain();		
 
 		// Render the snow
 		snow->renderParticles();
