@@ -3,9 +3,15 @@
 Work Distribution:
 - Ingrid
 	- Skybox
+	- Trees/Terrain
 - Karin
 	- Snow particle effect
 	- Character Model/Sled Model
+
+COMPONENTS:
+Animation:
+--------------------------------
+- Animation will be done via Keyframing. Code adapted from A2
 
 Snow Effect:
 --------------------------------
@@ -38,4 +44,6 @@ Terrain:
 - References:
 	Code Adapted from: http://www.codeproject.com/Articles/14154/OpenGL-Terrain-Generation-An-Introduction
 
-
+Trees:
+--------------------------------
+- Trees are made from three cones: One for the trunk, two for the branches. Trees are then generated via for loop in a 100 x 100 grid with set offset
