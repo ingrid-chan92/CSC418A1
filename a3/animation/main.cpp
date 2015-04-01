@@ -206,6 +206,9 @@ Terrain terrain;
 // Stores quadratic objects
 GLUquadricObj *qobj; 
 
+// Snowballs
+float snowballSize[10];
+
 // ***********  FUNCTION HEADER DECLARATIONS ****************
 
 
@@ -292,6 +295,16 @@ int main(int argc, char** argv)
 
 	// Init Terrain
 	terrain.initTerrain();
+
+	// Init Snowball sizes
+	snowballSize[0] = 2;
+	snowballSize[1] = 1.5;
+	snowballSize[2] = 1.5;
+	snowballSize[3] = 1;
+	snowballSize[4] = 2;
+	snowballSize[5] = 1.5;
+	snowballSize[6] = 1;
+	snowballSize[7] = 2;
 
     // Invoke the standard GLUT main event loop
     glutMainLoop();
@@ -536,7 +549,6 @@ void initGlui()
 
     GLUI_Master.set_glutIdleFunc(NULL);
 
-
 	// Create GLUI window (joint controls) ***************
 	//
 	glui_joints = GLUI_Master.create_glui("Joint Control", 0, Win[0]+12, 0);
@@ -685,8 +697,6 @@ void initGlui()
 	glui_spinner->set_float_limits(FULL_TRANSLATE_Z_MIN, FULL_TRANSLATE_Z_MAX, GLUI_LIMIT_CLAMP);
 	glui_spinner->set_speed(SPINNER_SPEED);
 
-
-
 	glui_joints->add_column(false);
 	// Initialize foot angle
 	joint_ui_data->setDOF(Keyframe::R_FOOT_YAW, 45.0);
@@ -731,6 +741,139 @@ void initGlui()
 
 	//
     // ***************************************************
+
+	// Create GLUI window (Snowballs) ***************
+	//
+	glui_joints = GLUI_Master.create_glui("Snowball Control", 0, Win[0]+12, 300);
+
+	// Create controls to specify root position and orientation
+	glui_panel = glui_joints->add_panel("All");
+
+	// Intialize spinners
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "translate x:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::SNOW_ALL_X));
+	glui_spinner->set_float_limits(FULL_TRANSLATE_X_MIN, FULL_TRANSLATE_X_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner->set_speed(SPINNER_SPEED);
+
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "translate y:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::SNOW_ALL_Y));
+	glui_spinner->set_float_limits(FULL_TRANSLATE_Y_MIN, FULL_TRANSLATE_Y_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner->set_speed(SPINNER_SPEED);
+
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "translate z:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::SNOW_ALL_Z));
+	glui_spinner->set_float_limits(FULL_TRANSLATE_Z_MIN, FULL_TRANSLATE_Z_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner->set_speed(SPINNER_SPEED);
+
+	glui_joints->add_column(false);
+
+	glui_panel = glui_joints->add_panel("Snowball 1");
+		glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "translate x:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::SNOW_1_X));
+	glui_spinner->set_float_limits(FULL_TRANSLATE_X_MIN, FULL_TRANSLATE_X_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner->set_speed(SPINNER_SPEED);
+
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "translate y:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::SNOW_1_Y));
+	glui_spinner->set_float_limits(FULL_TRANSLATE_Y_MIN, FULL_TRANSLATE_Y_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner->set_speed(SPINNER_SPEED);
+
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "translate z:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::SNOW_1_Z));
+	glui_spinner->set_float_limits(FULL_TRANSLATE_Z_MIN, FULL_TRANSLATE_Z_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner->set_speed(SPINNER_SPEED);
+
+	glui_panel = glui_joints->add_panel("Snowball 2");
+		glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "translate x:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::SNOW_2_X));
+	glui_spinner->set_float_limits(FULL_TRANSLATE_X_MIN, FULL_TRANSLATE_X_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner->set_speed(SPINNER_SPEED);
+
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "translate y:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::SNOW_2_Y));
+	glui_spinner->set_float_limits(FULL_TRANSLATE_Y_MIN, FULL_TRANSLATE_Y_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner->set_speed(SPINNER_SPEED);
+
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "translate z:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::SNOW_2_Z));
+	glui_spinner->set_float_limits(FULL_TRANSLATE_Z_MIN, FULL_TRANSLATE_Z_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner->set_speed(SPINNER_SPEED);
+
+	glui_joints->add_column(false);
+
+	glui_panel = glui_joints->add_panel("Snowball 3");
+		glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "translate x:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::SNOW_3_X));
+	glui_spinner->set_float_limits(FULL_TRANSLATE_X_MIN, FULL_TRANSLATE_X_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner->set_speed(SPINNER_SPEED);
+
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "translate y:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::SNOW_3_Y));
+	glui_spinner->set_float_limits(FULL_TRANSLATE_Y_MIN, FULL_TRANSLATE_Y_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner->set_speed(SPINNER_SPEED);
+
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "translate z:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::SNOW_3_Z));
+	glui_spinner->set_float_limits(FULL_TRANSLATE_Z_MIN, FULL_TRANSLATE_Z_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner->set_speed(SPINNER_SPEED);
+
+	glui_panel = glui_joints->add_panel("Snowball 4");
+		glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "translate x:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::SNOW_4_X));
+	glui_spinner->set_float_limits(FULL_TRANSLATE_X_MIN, FULL_TRANSLATE_X_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner->set_speed(SPINNER_SPEED);
+
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "translate y:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::SNOW_4_Y));
+	glui_spinner->set_float_limits(FULL_TRANSLATE_Y_MIN, FULL_TRANSLATE_Y_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner->set_speed(SPINNER_SPEED);
+
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "translate z:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::SNOW_4_Z));
+	glui_spinner->set_float_limits(FULL_TRANSLATE_Z_MIN, FULL_TRANSLATE_Z_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner->set_speed(SPINNER_SPEED);
+
+	glui_joints->add_column(false);
+
+	glui_panel = glui_joints->add_panel("Snowball 5");
+		glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "translate x:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::SNOW_5_X));
+	glui_spinner->set_float_limits(FULL_TRANSLATE_X_MIN, FULL_TRANSLATE_X_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner->set_speed(SPINNER_SPEED);
+
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "translate y:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::SNOW_5_Y));
+	glui_spinner->set_float_limits(FULL_TRANSLATE_Y_MIN, FULL_TRANSLATE_Y_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner->set_speed(SPINNER_SPEED);
+
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "translate z:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::SNOW_5_Z));
+	glui_spinner->set_float_limits(FULL_TRANSLATE_Z_MIN, FULL_TRANSLATE_Z_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner->set_speed(SPINNER_SPEED);
+
+	glui_panel = glui_joints->add_panel("Snowball 6");
+		glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "translate x:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::SNOW_6_X));
+	glui_spinner->set_float_limits(FULL_TRANSLATE_X_MIN, FULL_TRANSLATE_X_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner->set_speed(SPINNER_SPEED);
+
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "translate y:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::SNOW_6_Y));
+	glui_spinner->set_float_limits(FULL_TRANSLATE_Y_MIN, FULL_TRANSLATE_Y_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner->set_speed(SPINNER_SPEED);
+
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "translate z:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::SNOW_6_Z));
+	glui_spinner->set_float_limits(FULL_TRANSLATE_Z_MIN, FULL_TRANSLATE_Z_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner->set_speed(SPINNER_SPEED);
+
+
+	glui_joints->add_column(false);
+
+	glui_panel = glui_joints->add_panel("Snowball 7");
+		glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "translate x:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::SNOW_7_X));
+	glui_spinner->set_float_limits(FULL_TRANSLATE_X_MIN, FULL_TRANSLATE_X_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner->set_speed(SPINNER_SPEED);
+
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "translate y:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::SNOW_7_Y));
+	glui_spinner->set_float_limits(FULL_TRANSLATE_Y_MIN, FULL_TRANSLATE_Y_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner->set_speed(SPINNER_SPEED);
+
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "translate z:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::SNOW_7_Z));
+	glui_spinner->set_float_limits(FULL_TRANSLATE_Z_MIN, FULL_TRANSLATE_Z_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner->set_speed(SPINNER_SPEED);
+
+	glui_panel = glui_joints->add_panel("Snowball 8");
+		glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "translate x:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::SNOW_8_X));
+	glui_spinner->set_float_limits(FULL_TRANSLATE_X_MIN, FULL_TRANSLATE_X_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner->set_speed(SPINNER_SPEED);
+
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "translate y:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::SNOW_8_Y));
+	glui_spinner->set_float_limits(FULL_TRANSLATE_Y_MIN, FULL_TRANSLATE_Y_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner->set_speed(SPINNER_SPEED);
+
+	glui_spinner = glui_joints->add_spinner_to_panel(glui_panel, "translate z:", GLUI_SPINNER_FLOAT, joint_ui_data->getDOFPtr(Keyframe::SNOW_8_Z));
+	glui_spinner->set_float_limits(FULL_TRANSLATE_Z_MIN, FULL_TRANSLATE_Z_MAX, GLUI_LIMIT_CLAMP);
+	glui_spinner->set_speed(SPINNER_SPEED);
 
 
     // Create GLUI window (lightsource controls) ************
@@ -1223,6 +1366,51 @@ void drawTree(float x, float z) {
 	glPopMatrix();
 }
 
+void applySnowballMaterial() {
+		// Apply Material
+		float mat_specular[4]={0.2f,0.2f,0.2f,1.0f};
+		float mat_diffuse[4]={0.5f,0.5f,0.5f,1.0f};
+		float mat_ambient[4]={0.5f,0.5f,0.5f,1.0f};
+		float mat_shininess[1] = {0.1f};
+
+		glMaterialfv(GL_FRONT_AND_BACK,GL_SHININESS,mat_shininess);
+		glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR,mat_specular);
+		glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE,mat_diffuse);
+		glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT,mat_ambient);
+}
+
+void drawSnowball(float size, int x, int y, int z) {
+	glPushMatrix();
+		glTranslatef(joint_ui_data->getDOF(x),
+			 joint_ui_data->getDOF(y),
+			 joint_ui_data->getDOF(z));
+		glutSolidSphere(size, 32, 32);
+	glPopMatrix();
+}
+
+void drawSnowballs() {
+	// Render each snowball
+	glPushMatrix();
+		applySnowballMaterial();
+
+		// Move all snowballs at once
+		glTranslatef(joint_ui_data->getDOF(Keyframe::SNOW_ALL_X),
+				 joint_ui_data->getDOF(Keyframe::SNOW_ALL_Y),
+				 joint_ui_data->getDOF(Keyframe::SNOW_ALL_Z));
+
+		// Move each snowball individually
+		drawSnowball(snowballSize[0], Keyframe::SNOW_1_X, Keyframe::SNOW_1_Y, Keyframe::SNOW_1_Z);
+		drawSnowball(snowballSize[1], Keyframe::SNOW_2_X, Keyframe::SNOW_2_Y, Keyframe::SNOW_2_Z);
+		drawSnowball(snowballSize[2], Keyframe::SNOW_3_X, Keyframe::SNOW_3_Y, Keyframe::SNOW_3_Z);
+		drawSnowball(snowballSize[3], Keyframe::SNOW_4_X, Keyframe::SNOW_4_Y, Keyframe::SNOW_4_Z);
+		drawSnowball(snowballSize[4], Keyframe::SNOW_5_X, Keyframe::SNOW_5_Y, Keyframe::SNOW_5_Z);			
+		drawSnowball(snowballSize[5], Keyframe::SNOW_6_X, Keyframe::SNOW_6_Y, Keyframe::SNOW_6_Z);
+		drawSnowball(snowballSize[6], Keyframe::SNOW_7_X, Keyframe::SNOW_7_Y, Keyframe::SNOW_7_Z);
+		drawSnowball(snowballSize[7], Keyframe::SNOW_8_X, Keyframe::SNOW_8_Y, Keyframe::SNOW_8_Z);		
+		
+	glPopMatrix();
+}
+
 // display callback
 //
 // README: This gets called by the event handler
@@ -1303,6 +1491,8 @@ void display(void)
 			}
 		}	
 
+		drawSnowballs();
+
 		glPushMatrix();
 			// Move both char and sled at once
 			glTranslatef(joint_ui_data->getDOF(Keyframe::CHAR_SLED_TRANSLATE_X),
@@ -1318,7 +1508,7 @@ void display(void)
 		glPopMatrix();
 
 		drawSkybox();
-		terrain.renderTerrain();	
+		terrain.renderTerrain();
 
 		// Render the snow
 		snow->renderParticles();
