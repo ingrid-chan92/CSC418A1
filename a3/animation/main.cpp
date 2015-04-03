@@ -1525,11 +1525,11 @@ void display(void)
 
 		drawSkybox();
 		terrain.renderTerrain();
-
-		// Render the snow
-		snow->renderParticles();
 	glPopMatrix();
 
+
+	// Render the snow
+	snow->renderParticles();
 
     // Execute any GL functions that are in the queue just to be safe
     glFlush();

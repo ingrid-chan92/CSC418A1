@@ -5,6 +5,7 @@
 #include <time.h>
 #include <cstdlib>
 #include <stdio.h>
+#include <iostream>
 
 #include "particle.h"
 #include "./SOIL/SOIL.h"

@@ -6,8 +6,8 @@
 
 #define MAX_PARTICLES 10000
 #define MAX_PARTICLE_AGE 1000
-#define WINDOW_W 60
-#define WINDOW_H 50
+#define WINDOW_W 120
+#define WINDOW_H 100
 
 class ParticleEffect 
 {
@@ -17,7 +17,6 @@ public:
 		float X, Y, Z;		// Current position
 		float sX, sY, sZ;	// Current speed
 		float tX, tY, tZ;	// Target speed
-		//float R, G, B;		// Colour
 		bool active;
 		bool start;
 		int age;
