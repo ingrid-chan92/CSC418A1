@@ -4,14 +4,18 @@ Work Distribution:
 - Ingrid
 	- Skybox
 	- Trees/Terrain
+	- Created snowballs (for avalanche in animated scene)
 - Karin
 	- Snow particle effect
 	- Character Model/Sled Model
+	- Animated the scene
+
 
 COMPONENTS:
 Animation:
 --------------------------------
 - Animation will be done via Keyframing. Code adapted from A2
+
 
 Snow Effect:
 --------------------------------
@@ -43,6 +47,7 @@ Terrain:
 - Terrain is implemented in Terrain.cpp. InitTerrain() will grab all initial starting points for the vertices and the texture to be used for rendering and is called in Main(). RenderTerrain() will draw the terrain onto the scene
 - References:
 	Code Adapted from: http://www.codeproject.com/Articles/14154/OpenGL-Terrain-Generation-An-Introduction
+
 
 Trees:
 --------------------------------
