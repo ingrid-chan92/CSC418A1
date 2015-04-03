@@ -54,8 +54,9 @@ public:
 		   R_FOOT_PITCH,     R_FOOT_YAW, 
 		   L_FOOT_PITCH,     L_FOOT_YAW, 
 		   EYE_BLINK,        EYE_SIZE,
+		   LIGHT_TRANS_X,
+		   LIGHT_TRANS_Y,
 		   LIGHT_TRANS_Z,
-		   LIGHT_ROTATE_Z,
 		   NUM_JOINT_ENUM };
 
 	// constructor

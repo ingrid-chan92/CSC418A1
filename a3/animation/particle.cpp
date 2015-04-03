@@ -63,7 +63,7 @@ void ParticleEffect::setParticles()
 			Particles[p].X = ((float)(rand() % (win[0]*100 + 1)) / 100.0) - (win[0]/2.0); // Start along any x within the window
 			// If screen has no particles yet, start anywhere. Else (particles already falling), start at the top
 			Particles[p].Y = Particles[p].start ? ((float)(rand() % (win[1]*100 + 1)) / 100.0) - (win[1]/2.0) : win[1]/2.0;
-			Particles[p].Z = 0.0f;
+			Particles[p].Z = ((float)(rand() % (win[0]*100 + 1)) / 100.0) - (win[0]/2.0);
 
 			// Set a random speed value 
 			// (rand() % 100 + 1) - from 1 to 100
@@ -97,7 +97,8 @@ void ParticleEffect::updateParticles()
 
 		// Kill the particle if it gets too far out of the window
 		if (Particles[p].X < -(win[0]/2 + 0.5) || Particles[p].X > (win[0]/2 + 0.5) || 
-			Particles[p].Y < -(win[1]/2) || Particles[p].Y > (win[1]/2 + 0.5))
+			Particles[p].Y < -(win[1]/2) || Particles[p].Y > (win[1]/2 + 0.5) ||
+			Particles[p].Z < -(win[0]/2) || Particles[p].Z > (win[0]/2 + 0.5))
 			Particles[p].active = false;
 
 		// Check the age

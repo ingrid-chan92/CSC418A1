@@ -4,10 +4,10 @@
 #ifndef __PARTICLE_H__
 #define __PARTICLE_H__
 
-#define MAX_PARTICLES 300
-#define MAX_PARTICLE_AGE 150
-#define WINDOW_W 11
-#define WINDOW_H 9
+#define MAX_PARTICLES 10000
+#define MAX_PARTICLE_AGE 1000
+#define WINDOW_W 60
+#define WINDOW_H 50
 
 class ParticleEffect 
 {
