@@ -1,6 +1,12 @@
 * See RaytracerLinux for Raytracer Report
 
-Work Distribution:
+ANIMATION:
+---------------------------------
+- Animation can be found at: https://youtu.be/k4qq73Ni0xQ
+
+
+WORK DISTRIBUTION:
+---------------------------------
 - Ingrid
 	- Skybox
 	- Trees/Terrain
@@ -16,7 +22,6 @@ Animation:
 --------------------------------
 - Animation will be done via Keyframing. Code adapted from A2.
 - We decided to code the animation on Linux for easier portability between us. Unfortunately, as we are both running on VMs, the fps is low and the video rendered is slightly choppy.
-- Animation video can be found at: https://youtu.be/k4qq73Ni0xQ
 
 
 Snow Effect:
